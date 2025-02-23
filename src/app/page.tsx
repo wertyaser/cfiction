@@ -110,7 +110,7 @@ export default function Home() {
           <h2>Visual</h2>
         </div>
       </section>
-      <section className=" min-h-screen mx-auto ">
+      <section className="min-h-screen mx-auto ">
         <div id="contact-us">
           <h2>Contact Us</h2>
         </div>
