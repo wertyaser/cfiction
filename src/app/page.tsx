@@ -115,6 +115,9 @@ export default function Home() {
           <h2>Contact Us</h2>
         </div>
       </section>
+      <footer>
+        <p className="text-center">© 2025 Ctrl + Fiction</p>
+      </footer>
     </div>
   );
 }

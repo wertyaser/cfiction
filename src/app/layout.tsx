@@ -16,9 +16,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={archivo.className}>
         <main>{children}</main>
-        <footer>
-          <p className="text-center">© 2025 Ctrl + Fiction</p>
-        </footer>
       </body>
     </html>
   );
