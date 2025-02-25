@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import Banner from "@/components/ui/cbanner";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -10,7 +9,6 @@ export default function SignIn() {
   return (
     <section className="flex flex-row min-h-svh items-center justify-center gap-16">
       <Banner />
-
       <div className="w-full max-w-sm flex flex-col gap-6">
         <Card>
           <CardHeader>
@@ -44,12 +42,12 @@ export default function SignIn() {
                 </Button>
               </div>
               <div className="grid mt-4 text-center text-sm">
-                <a
+                <Link
                   href="#"
                   className="inline-block text-sm underline-offset-4 hover:underline"
                 >
                   Forgot your password?
-                </a>
+                </Link>
                 <div>
                   Don&apos;t have an account?
                   <Link

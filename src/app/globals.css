@@ -7,6 +7,12 @@ html {
   scroll-behavior: smooth;
 }
 
+@layer components {
+  .error {
+    @apply text-xs text-red-500 mt-1;
+  }
+}
+
 @layer base {
   /* Add your custom base styles here */
   body {
@@ -85,8 +91,6 @@ html {
     @apply bg-primary text-white px-3 py-1 rounded-md;
   }
 }
-
-
 
 @layer base {
   * {
