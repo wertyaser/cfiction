@@ -16,7 +16,7 @@ export default function Home() {
           <div className="flex items-center space-x-6">
             <Link href="/">Home</Link>
             <Link href="#about">About</Link>
-            <Link href="#visual">Visual</Link>
+            <Link href="#visual">Demo</Link>
             <Link href="#contact-us">Contact Us</Link>
           </div>
 
@@ -61,7 +61,7 @@ export default function Home() {
           </h1>
         </div> */}
       </div>
-      <section className="min-h-[65vh] pt-12">
+      <section id="about" className="min-h-[65vh] pt-12">
         <div className="flex pb-4">
           <h1 className="text-7xl font-semibold">A</h1>
           <h1 className="text-7xl font-thin ">bout</h1>
@@ -107,12 +107,12 @@ export default function Home() {
       </div>
       <section className=" min-h-screen mx-auto ">
         <div id="visual">
-          <h2>Visual</h2>
+          <h1 className="text-7xl text-bold">Demo</h1>
         </div>
       </section>
       <section className="min-h-screen mx-auto ">
         <div id="contact-us">
-          <h2>Contact Us</h2>
+          <h1 className="text-7xl text-bold">Contact Us</h1>
         </div>
       </section>
       <footer>
