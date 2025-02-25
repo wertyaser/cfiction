@@ -20,5 +20,5 @@ export async function register(state, formData) {
     };
   }
 
-  console.log(validatedFields);
+  // console.log(validatedFields);
 }
