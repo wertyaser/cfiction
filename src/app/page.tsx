@@ -124,6 +124,7 @@ export default function Home() {
           `}</style>
         </div>
       </div>
+      
       <section className=" min-h-screen mx-auto ">
         <div id="visual">
           <h1 className="text-7xl text-bold">Demo</h1>
