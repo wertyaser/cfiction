@@ -50,16 +50,6 @@ export default function Home() {
       </section>
       <div className="relative max-w-screen min-h-[50vh]">
         <Image src="/parallax.png" width={1943} height={774} alt="Parallax" />
-        {/* <div className="">
-          <h1 className="text-4xl md:text-8xl lg:text-9xl font-bold whitespace-nowrap">
-            Ctrl + [Fiction]
-          </h1>
-        </div>
-        <div className="">
-          <h1 className="text-4xl md:text-8xl lg:text-9xl font-bold whitespace-nowrap">
-            Ctrl + [Fiction]
-          </h1>
-        </div> */}
       </div>
       <section id="about" className="min-h-[65vh] pt-12">
         <div className="flex pb-4">
