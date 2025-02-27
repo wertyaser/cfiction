@@ -1,13 +1,38 @@
 "use client";
 
-import Link from "next/link";
+import About from "@/components/about";
+import ContactUs from "@/components/contact-us";
+import Demo from "@/components/demo";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+import Hero from "@/components/hero";
+import MostDownloaded from "@/components/most-downloaded";
+import { Separator } from "@/components/ui/separator";
+
+// import Link from "next/link";
 import Image from "next/image";
-import { topBooks } from "@/lib/topBooks";
+// import { topBooks } from "@/lib/topBooks";
 
 export default function Home() {
   return (
     <div className="">
-      <header className="relative">
+      <Header />
+      <Hero />
+      <Image
+        src="/parallax.png"
+        layout="responsive"
+        width={1080}
+        height={720}
+        alt="Parallax"
+      />
+      <About />
+      <Separator />
+      <MostDownloaded />
+      <Demo />
+      <ContactUs />
+      <Footer />
+
+      {/* <header className="relative">
         <nav className="p-6 max-w-screen-lg mx-auto flex items-center justify-between text-xl">
           <Link href="/">
             <Image src="/LOGO.png" alt="Logo" width={60} height={60} />
@@ -28,6 +53,7 @@ export default function Home() {
           </div>
         </nav>
       </header>
+
       <section
         className="min-h-[50vh] pt-[10%] pb-10 items-center flex flex-col "
         id="home"
@@ -48,6 +74,7 @@ export default function Home() {
           undeniably superior.
         </p>
       </section>
+
       <div className="relative max-w-screen min-h-[50vh]">
         <Image src="/parallax.png" width={1943} height={774} alt="Parallax" />
       </div>
@@ -66,6 +93,8 @@ export default function Home() {
           results and intelligent recommendations.
         </p>
       </section>
+
+
       <div className="min-h-[50vh] ">
         <h2 className="text-bold text-7xl text-center pb-4">Most Downloaded</h2>
         <div className="bg-primary text-white p-4">
@@ -107,7 +136,7 @@ export default function Home() {
       </section>
       <footer>
         <p className="text-center">© 2025 Ctrl + Fiction</p>
-      </footer>
+      </footer> */}
     </div>
   );
 }
