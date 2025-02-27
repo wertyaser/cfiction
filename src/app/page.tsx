@@ -7,7 +7,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import Hero from "@/components/hero";
 import MostDownloaded from "@/components/most-downloaded";
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator";
 
 // import Link from "next/link";
 import Image from "next/image";
@@ -26,7 +26,7 @@ export default function Home() {
         alt="Parallax"
       />
       <About />
-      <Separator />
+      {/* <Separator /> */}
       <MostDownloaded />
       <Demo />
       <ContactUs />
