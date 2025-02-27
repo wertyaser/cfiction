@@ -14,24 +14,6 @@ export default function MostDownloaded() {
           ))}
         </ul>
       </div>
-
-      {/* Marquee Animation */}
-      <style jsx>{`
-        @keyframes marquee {
-          from {
-            transform: translateX(100%);
-          }
-          to {
-            transform: translateX(-100%);
-          }
-        }
-        .animate-marquee {
-          display: flex;
-          white-space: nowrap;
-          overflow: hidden;
-          animation: marquee 15s linear infinite;
-        }
-      `}</style>
     </div>
   );
 }
