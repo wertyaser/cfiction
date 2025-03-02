@@ -13,23 +13,18 @@ export default function Demo() {
         <span>D</span>
         <span className="font-thin">emo</span>
       </h2>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center mt-5">
         <Card className="w-full">
-          <CardHeader className="pb-0">
-            <div className="flex justify-between">
-              <div className="flex items-center border border-gray-300 rounded px-2 py-1 w-fit">
-                <span className="mr-2">AtomicHabits.pdf</span>
-                <Download className="h-4 w-4 cursor-pointer" />
-              </div>
-              <Button
-                variant="default"
-                className="bg-gray-800 text-white text-sm px-3 py-1 h-auto"
-              >
-                /Atomic Habits
-              </Button>
+          {/* <CardHeader className=""></CardHeader> */}
+          <CardContent className="p-10">
+            <div className=" bg-gray-800 text-white text-sm p-2 rounded w-fit ">
+              <p>/Atomic Habits</p>
             </div>
-          </CardHeader>
-          <CardContent className="pt-10">
+            <div className="flex items-center border border-gray-300 rounded px-2 py-1 w-fit">
+              <span className="mr-2">AtomicHabits.pdf</span>
+              <Download className="h-4 w-4 cursor-pointer" />
+            </div>
+
             <div className="flex mt-4">
               <Input
                 type="text"
