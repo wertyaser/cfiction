@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@plugin "daisyui";
+
 *,
 html {
   scroll-behavior: smooth;
@@ -24,7 +24,7 @@ html {
 
 @layer components {
   .error {
-    @apply text-xs text-red-500 mt-1;
+    /* @apply text-sm text-red-500 mt-1; */
   }
 }
 
