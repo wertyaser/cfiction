@@ -19,8 +19,8 @@ export default function Home() {
       <Header />
       <Hero />
       <Image
+        className="min-w-full"
         src="/parallax.png"
-        layout="responsive"
         width={1080}
         height={720}
         alt="Parallax"
