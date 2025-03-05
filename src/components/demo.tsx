@@ -2,11 +2,15 @@ import { useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Download } from "lucide-react";
-import { Input } from "./ui/input";
+import { SendHorizontal } from "lucide-react";
+// import { Input } from "./ui/input";
 import { ChatBubble } from "./ui/chat/chat-bubble";
 import { ChatMessageList } from "./ui/chat/chat-message-list";
 import { ChatBubbleMessage } from "./ui/chat/chat-bubble";
-// import { ChatInput } from "./ui/chat/chat-input";
+import { ChatInput } from "./ui/chat/chat-input";
+import { Separator } from "./ui/separator";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { Separator } from "@radix-ui/react-separator";
 
 export default function Demo() {
   const [inputValue, setInputValue] = useState("");
@@ -36,15 +40,19 @@ export default function Demo() {
                 </ChatBubbleMessage>
               </ChatBubble>
 
-              <div className="flex mt-4">
-                <Input
+              <Separator className="my-2" />
+
+              <div className="flex justify-center items-center">
+                <ChatInput
                   placeholder="Type your message here!"
                   className="flex-grow rounded-r-none min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                 />
-                <Button size="sm" className="ml-auto gap-1.5">
-                  Send Message
+
+                <Button className="ml-auto gap-1.5 h-full">
+                  Send
+                  <SendHorizontal className="h-5 w-5" />
                 </Button>
               </div>
             </ChatMessageList>

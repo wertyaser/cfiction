@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-// import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import MessageLoading from "./message-loading";
 import { Button, ButtonProps } from "../button";
 
@@ -56,22 +56,22 @@ ChatBubble.displayName = "ChatBubble";
 // AVATARR UNCOMMENT IF WANT TO ADD AVATAR
 
 // ChatBubbleAvatar
-// interface ChatBubbleAvatarProps {
-//   src?: string;
-//   fallback?: string;
-//   className?: string;
-// }
+interface ChatBubbleAvatarProps {
+  src?: string;
+  fallback?: string;
+  className?: string;
+}
 
-// const ChatBubbleAvatar: React.FC<ChatBubbleAvatarProps> = ({
-//   src,
-//   fallback,
-//   className,
-// }) => (
-//   <Avatar className={className}>
-//     <AvatarImage src={src} alt="Avatar" />
-//     <AvatarFallback>{fallback}</AvatarFallback>
-//   </Avatar>
-// );
+const ChatBubbleAvatar: React.FC<ChatBubbleAvatarProps> = ({
+  src,
+  fallback,
+  className,
+}) => (
+  <Avatar className={className}>
+    <AvatarImage src={src} alt="Avatar" />
+    <AvatarFallback>{fallback}</AvatarFallback>
+  </Avatar>
+);
 
 // ChatBubbleMessage
 const chatBubbleMessageVariants = cva("p-4", {
@@ -194,7 +194,7 @@ ChatBubbleActionWrapper.displayName = "ChatBubbleActionWrapper";
 
 export {
   ChatBubble,
-  // ChatBubbleAvatar,
+  ChatBubbleAvatar,
   ChatBubbleMessage,
   ChatBubbleTimestamp,
   chatBubbleVariant,
