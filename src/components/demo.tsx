@@ -7,9 +7,10 @@ import { SendHorizontal } from "lucide-react";
 import { ChatBubble } from "./ui/chat/chat-bubble";
 import { ChatMessageList } from "./ui/chat/chat-message-list";
 import { ChatBubbleMessage } from "./ui/chat/chat-bubble";
+import { ChatBubbleAvatar } from "./ui/chat/chat-bubble";
 import { ChatInput } from "./ui/chat/chat-input";
 import { Separator } from "./ui/separator";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { Separator } from "@radix-ui/react-separator";
 
 export default function Demo() {
@@ -22,42 +23,126 @@ export default function Demo() {
         <span className="font-thin">emo</span>
       </h2>
       <div className="flex justify-center items-center mt-5">
-        <Card className="w-full">
-          <CardContent className="p-10">
-            <ChatMessageList>
-              {/* user chat */}
-              <ChatBubble variant="sent">
-                <ChatBubbleMessage>
-                  <span className="font-bold">/Atomic Habits</span>
-                </ChatBubbleMessage>
-              </ChatBubble>
+        <Tabs defaultValue="ebook" className="min-w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="ebook">Ebook Finder</TabsTrigger>
+            <TabsTrigger value="chatbot">AI Chatbot</TabsTrigger>
+          </TabsList>
 
-              {/* bot reply */}
-              <ChatBubble variant="received">
-                <ChatBubbleMessage className="flex items-center space-x-2">
-                  <span className="font-bold">AtomicHabits.pdf</span>
-                  <Download className="h-4 w-4 cursor-pointer" />
-                </ChatBubbleMessage>
-              </ChatBubble>
+          {/* E BOOK */}
+          <TabsContent value="ebook">
+            <Card className="w-full">
+              <CardContent className="p-10">
+                <ChatMessageList>
+                  {/* user chat */}
+                  <ChatBubble variant="sent">
+                    <ChatBubbleAvatar fallback="US" />
+                    <ChatBubbleMessage>
+                      <span className="font-bold">/Atomic Habits</span>
+                    </ChatBubbleMessage>
+                  </ChatBubble>
 
-              <Separator className="my-2" />
+                  {/* bot reply */}
+                  <ChatBubble variant="received">
+                    <ChatBubbleAvatar fallback="AI" />
+                    <ChatBubbleMessage className="flex items-center space-x-2">
+                      <span className="font-bold">AtomicHabits.pdf</span>
+                      <Download className="h-4 w-4 cursor-pointer" />
+                    </ChatBubbleMessage>
+                  </ChatBubble>
 
-              <div className="flex justify-center items-center">
-                <ChatInput
-                  placeholder="Type your message here!"
-                  className="flex-grow rounded-r-none min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                />
+                  <ChatBubble variant="received">
+                    <ChatBubbleAvatar fallback="AI" />
+                    <ChatBubbleMessage isLoading />
+                  </ChatBubble>
 
-                <Button className="ml-auto gap-1.5 h-full">
-                  Send
-                  <SendHorizontal className="h-5 w-5" />
-                </Button>
-              </div>
-            </ChatMessageList>
-          </CardContent>
-        </Card>
+                  <Separator className="my-2" />
+
+                  <div className="flex justify-center items-center">
+                    <ChatInput
+                      placeholder="Type your message here!"
+                      className="flex-grow rounded-r-none min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                    />
+
+                    <Button className="ml-auto gap-1.5 h-full">
+                      Send
+                      <SendHorizontal className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </ChatMessageList>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* CHAT BOT */}
+          <TabsContent value="chatbot">
+            <Card className="">
+              <CardContent className="p-10">
+                <ChatMessageList>
+                  {/* user chat */}
+                  <ChatBubble variant="sent">
+                    <ChatBubbleAvatar fallback="US" />
+                    <ChatBubbleMessage>
+                      <span className="font-bold">What is AI</span>
+                    </ChatBubbleMessage>
+                  </ChatBubble>
+
+                  {/* bot reply */}
+                  <ChatBubble variant="received">
+                    <ChatBubbleAvatar fallback="AI" />
+                    <ChatBubbleMessage className="flex items-center space-x-2">
+                      <span className="">
+                        AI (Artificial Intelligence) is the simulation of human
+                        intelligence in machines, allowing them to perform tasks
+                        that typically require human thinking, such as
+                        problem-solving, learning, reasoning, and
+                        decision-making. AI systems can be rule-based
+                        (traditional programming) or use machine learning, where
+                        they learn from data and improve over time. There are
+                        different types of AI: Narrow AI (Weak AI) Designed for
+                        specific tasks, like chatbots, trading bots, or
+                        recommendation systems (e.g., Netflix suggestions).
+                        General AI (Strong AI) Hypothetical AI that can think
+                        and reason like a human across any field. Super AI A
+                        future concept where AI surpasses human intelligence in
+                        all aspects. AI is used in many areas, including
+                        trading, healthcare, self-driving cars, robotics, and
+                        more. Since youre into trading and AI chatbot systems,
+                        AI can be leveraged for predictive analytics, automated
+                        trading strategies, and scraping information
+                        efficiently.
+                      </span>
+                      <Download className="h-4 w-4 cursor-pointer" />
+                    </ChatBubbleMessage>
+                  </ChatBubble>
+
+                  <ChatBubble variant="received">
+                    <ChatBubbleAvatar fallback="AI" />
+                    <ChatBubbleMessage isLoading />
+                  </ChatBubble>
+
+                  <Separator className="my-2" />
+
+                  <div className="flex justify-center items-center">
+                    <ChatInput
+                      placeholder="Type your message here!"
+                      className="flex-grow rounded-r-none min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                    />
+
+                    <Button className="ml-auto gap-1.5 h-full">
+                      Send
+                      <SendHorizontal className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </ChatMessageList>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </section>
   );

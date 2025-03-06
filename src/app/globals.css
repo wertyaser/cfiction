@@ -24,7 +24,7 @@ html {
 
 @layer components {
   .error {
-    /* @apply text-sm text-red-500 mt-1; */
+    @apply text-sm text-red-500 mt-1;
   }
 }
 
