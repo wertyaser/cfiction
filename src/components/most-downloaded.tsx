@@ -2,7 +2,7 @@ import { topBooks } from "@/lib/top-books";
 
 export default function MostDownloaded() {
   return (
-    <div className="min-h-[50vh] mt-10">
+    <div className="min-h-[45vh] mt-10">
       <h2 className="text-bold text-7xl text-center pb-6">Most Downloaded</h2>
       <div className="bg-primary text-white p-4">
         <ul className="flex flex-wrap justify-center space-x-4 animate-marquee">

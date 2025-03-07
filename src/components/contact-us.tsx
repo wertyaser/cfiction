@@ -3,6 +3,33 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
+import { Facebook, Twitter, Instagram } from "lucide-react";
+import { JSX } from "react";
+
+//array of social media links
+type SocialMedia = {
+  name: string;
+  link: string;
+  icon: JSX.Element;
+};
+
+const socialMedia: SocialMedia[] = [
+  {
+    name: "Facebook",
+    link: "https://www.facebook.com/",
+    icon: <Facebook />,
+  },
+  {
+    name: "Twitter",
+    link: "https://twitter.com/",
+    icon: <Twitter />,
+  },
+  {
+    name: "Instagram",
+    link: "https://www.instagram.com/",
+    icon: <Instagram />,
+  },
+];
 
 export default function ContactUs() {
   return (
@@ -36,6 +63,17 @@ export default function ContactUs() {
           </div>
         </CardContent>
       </Card>
+      <div className="flex justify-center items-center gap-5 mt-5">
+        {socialMedia.map((social, index) => (
+          <a
+            key={index}
+            href={social.link}
+            className="text-2xl hover:text-blue-700 flex items-center gap-2"
+          >
+            {social.icon}
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
