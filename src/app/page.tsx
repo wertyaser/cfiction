@@ -30,7 +30,7 @@ export default function Home() {
       <MostDownloaded />
       <Demo />
       <ContactUs />
-      <Footer />a
+      <Footer />
       {/* <header className="relative">
         <nav className="p-6 max-w-screen-lg mx-auto flex items-center justify-between text-xl">
           <Link href="/">

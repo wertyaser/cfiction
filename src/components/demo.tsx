@@ -17,7 +17,7 @@ export default function Demo() {
   const [inputValue, setInputValue] = useState("");
 
   return (
-    <section id="demo" className="min-h-screen max-w-4xl mx-auto">
+    <div id="demo" className="max-h-screen max-w-5xl mx-auto pb-28">
       <h2 className="text-7xl font-bold">
         <span>D</span>
         <span className="font-thin">emo</span>
@@ -78,7 +78,7 @@ export default function Demo() {
 
           {/* CHAT BOT */}
           <TabsContent value="chatbot">
-            <Card className="">
+            <Card>
               <CardContent className="p-10">
                 <ChatMessageList>
                   {/* user chat */}
@@ -104,15 +104,6 @@ export default function Demo() {
                         different types of AI: Narrow AI (Weak AI) Designed for
                         specific tasks, like chatbots, trading bots, or
                         recommendation systems (e.g., Netflix suggestions).
-                        General AI (Strong AI) Hypothetical AI that can think
-                        and reason like a human across any field. Super AI A
-                        future concept where AI surpasses human intelligence in
-                        all aspects. AI is used in many areas, including
-                        trading, healthcare, self-driving cars, robotics, and
-                        more. Since youre into trading and AI chatbot systems,
-                        AI can be leveraged for predictive analytics, automated
-                        trading strategies, and scraping information
-                        efficiently.
                       </span>
                       <Download className="h-4 w-4 cursor-pointer" />
                     </ChatBubbleMessage>
@@ -144,6 +135,6 @@ export default function Demo() {
           </TabsContent>
         </Tabs>
       </div>
-    </section>
+    </div>
   );
 }
