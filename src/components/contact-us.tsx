@@ -1,6 +1,8 @@
 import { Card, CardContent } from "./ui/card";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Button } from "./ui/button";
 
 export default function ContactUs() {
   return (
@@ -19,15 +21,18 @@ export default function ContactUs() {
         <CardContent>
           <div className="grid grid-cols-2 gap-5">
             <div className="">
-              <Label>First Name</Label>
-              <Input type="text" placeholder="ex. John" />
-              <Label>First Name</Label>
-              <Input type="text" placeholder="ex. John" />
+              <Label>Name</Label>
+              <Input type="text" placeholder="ex. John Doe" />
             </div>
             <div className="">
-              <Label>Last Name</Label>
-              <Input type="text" placeholder="" />
+              <Label>Email</Label>
+              <Input type="email" placeholder="ex. 2021-******@rtu.edu.ph" />
             </div>
+          </div>
+          <div className="flex flex-col mt-5 gap-2">
+            <Label>Your message</Label>
+            <Textarea placeholder="Type your message here..." />
+            <Button className="">Submit</Button>
           </div>
         </CardContent>
       </Card>
