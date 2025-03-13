@@ -20,7 +20,7 @@ export default function ChatBot() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarTrigger />
-      <Card className="max-w-7xl mx-auto flex items-center justify-center mt-10">
+      <Card className="max-w-7xl m-auto h-full">
         <CardContent className="p-10">
           <ChatMessageList>
             {/* user chat */}
