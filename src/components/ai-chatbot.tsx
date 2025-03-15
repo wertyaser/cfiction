@@ -50,9 +50,9 @@ export default function AiChatbot() {
     setLoading(false);
   };
   return (
-    <div className="h-screen flex justify-center items-center p-4 mx-auto ">
+    <div className="flex justify-center items-center mt-5">
       {/* Card: Responsive width, fixed height */}
-      <Card className="h-screen w-full max-w-5xl md:w-[1000px] sm:w-[900px] shadow-lg bg-primary">
+      <Card className="h-[90vh] w-full max-w-5xl md:w-[1000px] sm:w-[900px] shadow-lg bg-primary">
         <CardContent className="p-6 h-full flex flex-col">
           {/* Scrollable message list */}
           <div className="flex-1 overflow-y-auto">
