@@ -24,7 +24,7 @@ export default function Home() {
         alt="Parallax"
       />
       <Image
-        src="/parallax-white.png"
+        src="/parallax-white.svg"
         alt="Dark Mode Logo"
         width={1080}
         height={720}
