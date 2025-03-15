@@ -7,30 +7,35 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import Hero from "@/components/hero";
 import MostDownloaded from "@/components/most-downloaded";
-// import { Separator } from "@/components/ui/separator";
-
-// import Link from "next/link";
 import Image from "next/image";
-// import { topBooks } from "@/lib/topBooks";
+// import dynamic from "next/dynamic";
 
 export default function Home() {
+  // const NoSSR = dynamic(() => import("../components/no-ssr"), { ssr: false });
   return (
     <div className="bg-background text-foreground">
       <Header />
       <Hero />
       <Image
-        className="min-w-full"
-        src="/parallax.png"
+        className="min-w-full block dark:hidden"
+        src="/parallax.svg"
         width={1080}
         height={720}
         alt="Parallax"
       />
+      <Image
+        src="/parallax-white.png"
+        alt="Dark Mode Logo"
+        width={1080}
+        height={720}
+        className="hidden dark:block min-w-full"
+      />
       <About />
-      {/* <Separator /> */}
       <MostDownloaded />
       <Demo />
       <ContactUs />
       <Footer />
+      {/* <NoSSR /> */}
     </div>
   );
 }

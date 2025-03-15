@@ -9,10 +9,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+// import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const items = ["Home", "About", "Demo", "Contact Us"];
   const { setTheme } = useTheme();
+  // const [mounted, setMounted] = useState(false);
+
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
+
+  // // Prevent hydration mismatch by not rendering until mounted
+  // if (!mounted) return null;
 
   return (
     <nav className="p-6 max-w-screen-lg mx-auto flex items-center justify-between text-">
