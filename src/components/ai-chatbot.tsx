@@ -21,6 +21,19 @@ export default function AiChatbot() {
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Load message from localStorage on mount
+  React.useEffect(() => {
+    const savedMessages = localStorage.getItem("chatHistory");
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, []);
+
+  // Save messages to localStorage whenever they change
+  React.useEffect(() => {
+    localStorage.setItem("chatHistory", JSON.stringify(messages));
+  }, [messages]);
+
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
     setLoading(true);
@@ -49,6 +62,7 @@ export default function AiChatbot() {
 
     setLoading(false);
   };
+
   return (
     <div className="flex justify-center items-center mt-5">
       {/* Card: Responsive width, fixed height */}

@@ -1,4 +1,5 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Trash, MessageCircle } from "lucide-react";
 
 import {
   Sidebar,
@@ -12,36 +13,33 @@ import {
 } from "@/components/ui/sidebar";
 import SideHeader from "./sidebar-header";
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
+type ChatMessage = { role: "user" | "bot"; content: string };
 
-export function AppSidebar() {
+export function AppSidebar({
+  setMessages,
+}: {
+  setMessages: (messages: ChatMessage[]) => void;
+}) {
+  const [chatHistory, setChatHistory] = useState<
+    { role: string; content: string }[]
+  >([]);
+
+  useEffect(() => {
+    const savedMessages = localStorage.getItem("chatHistory");
+    if (savedMessages) {
+      setChatHistory(JSON.parse(savedMessages) as ChatMessage[]);
+    }
+  }, []);
+
+  const loadConversation = () => {
+    setMessages(chatHistory);
+  };
+
+  const clearHistory = () => {
+    setChatHistory([]);
+    setMessages([]);
+  };
+
   return (
     <Sidebar>
       <SideHeader />
@@ -50,16 +48,30 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
+              {chatHistory.length > 0 ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={loadConversation}>
+                    <MessageCircle />
+                    <span>Continue Chat</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}
+              ) : (
+                <p className="text-center text-gray-500">
+                  No history available
+                </p>
+              )}
+
+              {chatHistory.length > 0 && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    onClick={clearHistory}
+                    className="text-red-500"
+                  >
+                    <Trash />
+                    <span>Clear History</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
