@@ -8,10 +8,19 @@ import Header from "@/components/header";
 import Hero from "@/components/hero";
 import MostDownloaded from "@/components/most-downloaded";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 // import dynamic from "next/dynamic";
 
 export default function Home() {
   // const NoSSR = dynamic(() => import("../components/no-ssr"), { ssr: false });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) return null;
   return (
     <div className="bg-background text-foreground">
       <Header />
