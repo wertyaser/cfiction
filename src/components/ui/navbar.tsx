@@ -26,7 +26,10 @@ export default function Navbar() {
       {/* Authentication */}
       <div className="hidden md:flex items-center space-x-6">
         <Link href="/register">Register</Link>
-        <Link className="bg-background text-foreground" href="/sign-in">
+        <Link
+          className="bg-foreground text-background p-2 rounded-sm"
+          href="/sign-in"
+        >
           Sign in
         </Link>
         <ThemeSwitch />
