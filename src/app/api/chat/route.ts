@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
 
     const response = await ollama.chat({
-      model: "llama3.2:latest", // Ensure this model is installed in Ollama
+      model: "gemma3:4b", // Ensure this model is installed in Ollama
       messages,
     });
 

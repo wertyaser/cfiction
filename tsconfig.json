@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/actions/auth.js"
+    "src/actions/registration-validation.js"
   ],
   "exclude": ["node_modules"]
 }
