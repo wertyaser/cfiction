@@ -2,16 +2,34 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { register } from "@/actions/auth.js";
+import { register } from "@/actions/validation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Banner from "@/components/ui/cbanner";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+// Define the type for state
+interface RegisterState {
+  errors?: {
+    email?: string[];
+    password?: string[];
+    confirmPassword?: string[];
+  };
+  email?: string;
+  success?: boolean;
+}
 
 export default function Register() {
-  const [state, action, isPending] = useActionState(register, undefined);
+  const [state, action, isPending] = useActionState<RegisterState>(
+    register,
+    undefined
+  );
 
+  const router = useRouter();
+  if (state?.success) {
+    router.push("/sign-in");
+  }
   return (
     <div>
       <section className="flex flex-row min-h-svh items-center justify-center gap-16">

@@ -37,11 +37,6 @@ export default function Home() {
         width={1080}
         height={720}
         className="hidden dark:block min-w-full"
-        src="/parallax-white.svg"
-        alt="Dark Mode Logo"
-        width={1080}
-        height={720}
-        className="hidden dark:block min-w-full"
       />
       <About />
       <MostDownloaded />
