@@ -1,5 +1,5 @@
 // lib/auth.ts
-import NextAuth from "next-auth";
+import NextAuth, { type AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { TursoAdapter } from "@/lib/turso-adapter";
@@ -7,8 +7,25 @@ import { db } from "@/db";
 import bcrypt from "bcryptjs";
 import type { JWT } from "next-auth/jwt";
 import type { Session } from "next-auth";
+import type { User } from "next-auth";
 
-export const authOptions = {
+interface DbUser {
+  id: string;
+  email: string;
+  password: string;
+  name: string | null;
+}
+
+interface ExtendedSession extends Session {
+  user: {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+}
+
+export const authOptions: AuthOptions = {
   adapter: TursoAdapter(),
 
   providers: [
@@ -19,17 +36,26 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
 
-      async authorize(credentials: { email: string; password: string }) {
-        const user = await db.execute({
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
+
+        const result = await db.execute({
           sql: "SELECT * FROM users WHERE email = ?",
           args: [credentials.email],
         });
 
-        if (!user || !bcrypt.compareSync(credentials.password, user.password)) {
-          throw new Error("Invalid email or password");
+        if (result.rows.length === 0) return null;
+
+        const user = result.rows[0] as unknown as DbUser;
+        if (!bcrypt.compareSync(credentials.password, user.password)) {
+          return null;
         }
 
-        return user;
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name || undefined,
+        };
       },
     }),
 
@@ -40,20 +66,29 @@ export const authOptions = {
   ],
 
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
 
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: any }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) token.id = user.id;
       return token;
     },
 
-    async session({ session, token }: { session: Session; token: JWT }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-      }
-      return session;
+    async session({
+      session,
+      token,
+    }: {
+      session: Session;
+      token: JWT;
+    }): Promise<ExtendedSession> {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id as string,
+        },
+      };
     },
   },
 

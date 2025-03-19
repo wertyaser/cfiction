@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Trash, MessageCircle } from "lucide-react";
 
 import {
@@ -13,31 +13,31 @@ import {
 } from "@/components/ui/sidebar";
 import SideHeader from "./sidebar-header";
 
-type ChatMessage = { role: "user" | "bot"; content: string };
+type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+interface AppSidebarProps {
+  onDeleteChat: (id: string) => void;
+  onSelectChat: (id: string) => void;
+  selectedChatId: string | null;
+}
 
 export function AppSidebar({
-  setMessages,
-}: {
-  setMessages: (messages: ChatMessage[]) => void;
-}) {
-  const [chatHistory, setChatHistory] = useState<
-    { role: string; content: string }[]
-  >([]);
-
-  useEffect(() => {
-    const savedMessages = localStorage.getItem("chatHistory");
-    if (savedMessages) {
-      setChatHistory(JSON.parse(savedMessages) as ChatMessage[]);
-    }
-  }, []);
+  onDeleteChat,
+  onSelectChat,
+  selectedChatId,
+}: AppSidebarProps) {
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
 
   const loadConversation = () => {
-    setMessages(chatHistory);
+    onSelectChat(chatHistory[0].role);
   };
 
   const clearHistory = () => {
     setChatHistory([]);
-    setMessages([]);
+    onDeleteChat(selectedChatId || "");
   };
 
   return (

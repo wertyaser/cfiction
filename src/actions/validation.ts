@@ -5,7 +5,20 @@ import { db } from "@/db";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 
-export async function register(prevState: any, formData: FormData) {
+interface RegisterState {
+  errors?: {
+    email?: string[];
+    password?: string[];
+    confirmPassword?: string[];
+    form?: string[];
+  };
+  success?: boolean;
+}
+
+export async function register(
+  prevState: RegisterState | undefined,
+  formData: FormData
+): Promise<RegisterState> {
   try {
     const email = formData.get("email") as string | null;
     const password = formData.get("password") as string | null;
@@ -41,16 +54,20 @@ export async function register(prevState: any, formData: FormData) {
 
     // Hash password securely
     const hashedPassword = await bcrypt.hash(password, 10);
+    const userId = randomUUID();
 
     // Insert new user into the database
     await db.execute({
       sql: "INSERT INTO users (id, email, password, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)",
-      args: [randomUUID(), email, hashedPassword],
+      args: [userId, email, hashedPassword],
     });
 
     return { success: true };
   } catch (error) {
     console.error("Registration error:", error);
+    if (error instanceof Error) {
+      return { errors: { form: [error.message] } };
+    }
     return { errors: { form: ["An unexpected error occurred."] } };
   }
 }
