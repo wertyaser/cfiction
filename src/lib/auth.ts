@@ -5,9 +5,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { TursoAdapter } from "@/lib/turso-adapter";
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
-import type { JWT } from "next-auth/jwt";
-import type { Session } from "next-auth";
-import type { User } from "next-auth";
 
 interface DbUser {
   id: string;
@@ -16,18 +13,13 @@ interface DbUser {
   name: string | null;
 }
 
-interface ExtendedSession extends Session {
-  user: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  };
-}
-
 export const authOptions: AuthOptions = {
   adapter: TursoAdapter(),
-
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -65,39 +57,26 @@ export const authOptions: AuthOptions = {
     }),
   ],
 
-  session: {
-    strategy: "jwt" as const,
-  },
-
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User }) {
-      if (user) token.id = user.id;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
       return token;
     },
 
-    async session({
-      session,
-      token,
-    }: {
-      session: Session;
-      token: JWT;
-    }): Promise<ExtendedSession> {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id as string,
-        },
-      };
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
     },
   },
 
   pages: {
-    signIn: "/auth/sign-in",
-    error: "/auth/sign-in",
+    signIn: "/sign-in",
+    error: "/sign-in",
   },
-
-  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);

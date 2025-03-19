@@ -1,29 +1,51 @@
+// /app/api/chat/route.ts
 import { NextResponse } from "next/server";
 import ollama from "ollama";
 
-interface ChatMessage {
-  role: "user" | "assistant";
+// Define interfaces for our chat messages
+interface Message {
+  role: string;
   content: string;
 }
 
-interface ChatRequest {
-  messages: ChatMessage[];
-}
-
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const { messages } = (await req.json()) as ChatRequest;
+    // Get the messages from the request body
+    const { messages } = await request.json();
 
+    // Format messages for Ollama API
+    // Convert 'bot' role to 'assistant' as Ollama expects
+    const formattedMessages = messages.map((msg: Message) => ({
+      role: msg.role === "bot" ? "assistant" : msg.role,
+      content: msg.content,
+    }));
+
+    // Set the Ollama API host if needed (default is http://localhost:11434)
+    // ollama.setHost('http://localhost:11434');
+
+    // Generate a response using the ollama client
     const response = await ollama.chat({
-      model: "llama3.2:latest", // Ensure this model is installed in Ollama
-      messages,
+      model: "llama3.2:latest", // Adjust model name as needed (e.g., 'llama3', 'llama2', etc.)
+      messages: formattedMessages,
+      // Optional parameters
+      stream: false,
+      // options: {
+      //   temperature: 0.7,
+      //   top_p: 0.9,
+      //   num_predict: 128,
+      // }
     });
 
+    // Return the AI message content to the client
     return NextResponse.json({ message: response.message.content });
   } catch (error) {
-    console.error("Error in API:", error);
+    console.error("Error processing chat request:", error);
+    // If the error is from Ollama, it might have useful details
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
     return NextResponse.json(
-      { message: "Error getting response." },
+      { error: `Failed to process chat request: ${errorMessage}` },
       { status: 500 }
     );
   }
