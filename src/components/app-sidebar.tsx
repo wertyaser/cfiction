@@ -1,4 +1,5 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+"use client";
+import { Calendar, Home, Inbox, Search, Settings, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,6 +11,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import SideHeader from "./sidebar-header";
+import { Button } from "./ui/button";
+import { signOut } from "next-auth/react";
 
 const items = [
   {
@@ -40,6 +43,9 @@ const items = [
 ];
 
 export default function AppSidebar() {
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
   return (
     <Sidebar>
       <SideHeader />
@@ -61,6 +67,15 @@ export default function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <div className="p-4">
+          <Button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2"
+          >
+            <LogOut />
+            <span>Logout</span>
+          </Button>
+        </div>
       </SidebarContent>
     </Sidebar>
   );
