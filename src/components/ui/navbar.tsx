@@ -5,7 +5,7 @@ import Image from "next/image";
 import ThemeSwitch from "./theme-switch";
 
 export default function Navbar() {
-  const items = ["Home", "About", "Demo", "Contact Us"];
+  const items = ["Home", "About", "Preview", "Contact Us"];
 
   return (
     <nav className="p-6 max-w-screen-lg mx-auto flex items-center justify-between text-">

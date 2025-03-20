@@ -14,14 +14,14 @@ import { Separator } from "./ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { Separator } from "@radix-ui/react-separator";
 
-export default function Demo() {
+export default function Preview() {
   const [inputValue, setInputValue] = useState("");
 
   return (
     <div id="demo" className="max-h-screen max-w-5xl mx-auto pb-28">
       <h2 className="text-7xl font-bold">
-        <span>D</span>
-        <span className="font-thin">emo</span>
+        <span>P</span>
+        <span className="font-thin">review</span>
       </h2>
       <div className="flex justify-center items-center mt-5">
         <Tabs defaultValue="ebook" className="min-w-full">

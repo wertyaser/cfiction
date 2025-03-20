@@ -1,7 +1,7 @@
 "use client";
 import About from "@/components/about";
 import ContactUs from "@/components/contact-us";
-import Demo from "@/components/demo";
+import Preview from "@/components/preview";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import Hero from "@/components/hero";
@@ -40,7 +40,7 @@ export default function Home() {
       />
       <About />
       <MostDownloaded />
-      <Demo />
+      <Preview />
       <ContactUs />
       <Footer />
       {/* <NoSSR /> */}
