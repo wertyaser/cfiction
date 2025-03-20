@@ -43,7 +43,7 @@ export default function AiChatbot() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // We'll update the name with the first message later
-        body: JSON.stringify({ name: "New Chat", user_id: "1" }),
+        body: JSON.stringify({ name: "New Chat", id: "1" }),
       });
 
       const data = await res.json();
