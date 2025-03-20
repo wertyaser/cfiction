@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 export default function SideHeader() {
   const { data: session } = useSession();
   const userEmail = session?.user?.email || "Guest";
-  const userName = session?.user?.name || "User";
+  const userName = session?.user?.name;
   const userImage = session?.user?.image;
 
   return (
@@ -18,7 +18,7 @@ export default function SideHeader() {
       <div className="flex items-center gap-3">
         <Avatar>
           <AvatarImage src={userImage || undefined} />
-          <AvatarFallback>{userName.slice(0, 2).toUpperCase()}</AvatarFallback>
+          <AvatarFallback>{userName?.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
         <Separator orientation="vertical" />
         <div className="flex flex-col">

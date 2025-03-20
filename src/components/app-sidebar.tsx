@@ -1,5 +1,5 @@
 "use client";
-import { Calendar, Home, Inbox, Search, Settings, LogOut } from "lucide-react";
+import { Files, Settings, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -13,27 +13,13 @@ import {
 import SideHeader from "./sidebar-header";
 import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 const items = [
   {
-    title: "Home",
+    title: "Files",
     url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    icon: Files,
   },
   {
     title: "Settings",
@@ -51,32 +37,32 @@ export default function AppSidebar() {
       <SideHeader />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Account</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <div className="p-4">
-          <Button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-2"
-          >
-            <LogOut />
-            <span>Logout</span>
-          </Button>
-        </div>
       </SidebarContent>
+      <div className="p-4 mb-12">
+        <Button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-2"
+        >
+          <LogOut />
+          <span>Logout</span>
+        </Button>
+      </div>
     </Sidebar>
   );
 }
