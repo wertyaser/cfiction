@@ -11,10 +11,14 @@ export default function ChatBot() {
         <AppSidebar />
         <SidebarTrigger />
         <div className="max-h-screen max-w-5xl mx-auto pb-28">
-          <Tabs defaultValue="chatbot" className="min-w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="ebook">Ebook Finder</TabsTrigger>
-              <TabsTrigger value="chatbot">AI Chatbot</TabsTrigger>
+          <Tabs defaultValue="ebook" className="min-w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-foreground text-background">
+              <TabsTrigger value="ebook" className="shadow-muted-foreground">
+                Ebook Finder
+              </TabsTrigger>
+              <TabsTrigger value="chatbot" className="shadow-muted-foreground">
+                AI Chatbot
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="ebook">
               <EbookFinder />
