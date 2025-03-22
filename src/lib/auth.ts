@@ -1,7 +1,7 @@
 // lib/auth.ts
 import NextAuth, { type AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
+// import GoogleProvider from "next-auth/providers/google";
 import { TursoAdapter } from "@/lib/turso-adapter";
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
@@ -51,10 +51,10 @@ export const authOptions: AuthOptions = {
       },
     }),
 
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID!,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    // }),
   ],
 
   callbacks: {
