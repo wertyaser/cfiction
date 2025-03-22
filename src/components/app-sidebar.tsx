@@ -14,6 +14,8 @@ import SideHeader from "./sidebar-header";
 import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import ThemeSwitch from "./ui/theme-switch";
+import { Separator } from "./ui/separator";
 
 const items = [
   {
@@ -37,6 +39,13 @@ export default function AppSidebar() {
       <SideHeader />
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel>Theme</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="">
+              <ThemeSwitch />
+            </SidebarMenu>
+          </SidebarGroupContent>
+          <Separator className="my-3" />
           <SidebarGroupLabel>Account</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
