@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useFormState } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { register } from "@/actions/validation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Banner from "@/components/ui/cbanner";
@@ -20,8 +21,18 @@ interface RegisterState {
   success?: boolean;
 }
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button disabled={pending} type="submit" className="w-full">
+      {pending ? "Loading..." : "Register"}
+    </Button>
+  );
+}
+
 export default function Register() {
-  const [state, action, isPending] = useActionState<RegisterState>(
+  const [state, formAction] = useFormState<RegisterState | undefined, FormData>(
     register,
     undefined
   );
@@ -42,7 +53,7 @@ export default function Register() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form action={action}>
+              <form action={formAction}>
                 <div className="flex flex-col gap-3">
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
@@ -82,13 +93,7 @@ export default function Register() {
                     {state?.errors?.confirmPassword && (
                       <p className="error">{state.errors.confirmPassword}</p>
                     )}
-                    <Button
-                      disabled={isPending}
-                      type="submit"
-                      className="w-full"
-                    >
-                      {isPending ? "Loading..." : "Register"}
-                    </Button>
+                    <SubmitButton />
                   </div>
                 </div>
                 <div className="mt-4 text-center text-sm">

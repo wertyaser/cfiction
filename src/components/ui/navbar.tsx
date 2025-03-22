@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import ThemeSwitch from "./theme-switch";
+import { Button } from "./button";
 
 export default function Navbar() {
   const items = ["Home", "About", "Preview", "Contact Us"];
@@ -24,14 +25,13 @@ export default function Navbar() {
       </div>
 
       {/* Authentication */}
-      <div className="hidden md:flex items-center space-x-6">
+      <div className="hidden md:flex items-center space-x-3">
         <Link href="/register">Register</Link>
-        <Link
-          className="bg-foreground text-background p-2 rounded-sm"
-          href="/sign-in"
-        >
-          Sign in
-        </Link>
+        <Button asChild variant="outline">
+          <Link className="bg-foreground text-background p-2" href="/sign-in">
+            Sign in
+          </Link>
+        </Button>
         <ThemeSwitch />
       </div>
       {/* <div></div> */}
