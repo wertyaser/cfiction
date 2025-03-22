@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useFormState } from "react-dom";
-import { useFormStatus } from "react-dom";
+import { useActionState } from "react";
 import { register } from "@/actions/validation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Banner from "@/components/ui/cbanner";
@@ -10,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useFormStatus } from "react-dom";
 // Define the type for state
 interface RegisterState {
   errors?: {
@@ -21,21 +21,13 @@ interface RegisterState {
   success?: boolean;
 }
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button disabled={pending} type="submit" className="w-full">
-      {pending ? "Loading..." : "Register"}
-    </Button>
-  );
-}
-
 export default function Register() {
-  const [state, formAction] = useFormState<RegisterState | undefined, FormData>(
+  const [state, action] = useActionState<RegisterState | undefined, FormData>(
     register,
     undefined
   );
+
+  const { pending } = useFormStatus();
 
   const router = useRouter();
   if (state?.success) {
@@ -53,7 +45,7 @@ export default function Register() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form action={formAction}>
+              <form action={action}>
                 <div className="flex flex-col gap-3">
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
@@ -93,7 +85,9 @@ export default function Register() {
                     {state?.errors?.confirmPassword && (
                       <p className="error">{state.errors.confirmPassword}</p>
                     )}
-                    <SubmitButton />
+                    <Button disabled={pending} type="submit" className="w-full">
+                      {pending ? "Loading..." : "Register"}
+                    </Button>
                   </div>
                 </div>
                 <div className="mt-4 text-center text-sm">
