@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/chat/chat-bubble";
 import { SendHorizontal } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { ChatInput } from "@/components/ui/chat/chat-input";
+// import { ChatInput } from "@/components/ui/chat/chat-input";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "./ui/textarea";
 
 export default function AiChatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -64,7 +65,7 @@ export default function AiChatbot() {
   };
 
   return (
-    <div className="flex justify-center items-center mt-5 border border-foreground rounded-lg">
+    <div className="flex justify-center items-center mt-5 border border-muted-foreground rounded-lg">
       {/* Card: Responsive width, fixed height */}
       <Card className=" h-[90vh] w-full max-w-5xl md:w-[1000px] sm:w-[900px] shadow-xl bg-background">
         <CardContent className="p-6 h-full flex flex-col">
@@ -97,8 +98,8 @@ export default function AiChatbot() {
           <Separator className="my-2" />
 
           {/* Chat Input */}
-          <div className="flex items-center">
-            <ChatInput
+          <div className="flex items-center gap-3">
+            <Textarea
               placeholder="Type your message here!"
               className="flex-grow rounded-r-none min-h-12 resize-none bg-background border-0 p-4 shadow-none focus-visible:ring-0"
               value={inputValue}
