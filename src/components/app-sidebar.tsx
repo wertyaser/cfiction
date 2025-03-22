@@ -41,7 +41,7 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Theme</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="">
+            <SidebarMenu className="flex items-center justify-between">
               <ThemeSwitch />
             </SidebarMenu>
           </SidebarGroupContent>

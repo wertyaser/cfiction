@@ -12,7 +12,7 @@ export default function ChatBot() {
         <SidebarTrigger />
         <div className="max-h-screen max-w-5xl mx-auto pb-28">
           <Tabs defaultValue="ebook" className="min-w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-muted text-muted-background">
+            <TabsList className="grid w-full grid-cols-2 bg-foreground text-background">
               <TabsTrigger value="ebook" className="shadow-muted-foreground">
                 Ebook Finder
               </TabsTrigger>
