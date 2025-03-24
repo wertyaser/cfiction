@@ -34,3 +34,13 @@ export const RegisterFormSchema = z
       });
     }
   });
+
+export const ForgotPassword = z.object({
+  email: z
+    .string()
+    .email({ message: "Please enter a valid email." })
+    .regex(/@rtu.edu.ph$/, {
+      message: "RTU email only",
+    })
+    .trim(),
+});
