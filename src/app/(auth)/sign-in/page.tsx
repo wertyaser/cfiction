@@ -43,13 +43,14 @@ export default function SignIn() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await signIn("google", { callbackUrl: "/chatbot" });
-    } catch {
-      setError("An error occurred during Google sign in");
-    }
-  };
+  //google oauth
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     await signIn("google", { callbackUrl: "/chatbot" });
+  //   } catch {
+  //     setError("An error occurred during Google sign in");
+  //   }
+  // };
 
   return (
     <section className="flex flex-row min-h-svh items-center justify-center gap-16">
@@ -93,14 +94,6 @@ export default function SignIn() {
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Signing in..." : "Login"}
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={handleGoogleSignIn}
-                >
-                  Login with Google
-                </Button>
               </div>
               <div className="grid mt-4 text-center text-sm">
                 <Link
@@ -115,7 +108,7 @@ export default function SignIn() {
                     href="/register"
                     className="underline underline-offset-4"
                   >
-                    Sign up
+                    Register
                   </Link>
                 </div>
               </div>
