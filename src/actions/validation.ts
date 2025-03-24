@@ -3,7 +3,7 @@
 import { RegisterFormSchema } from "@/lib/rules";
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
-import { randomUUID } from "crypto";
+// import { randomUUID } from "crypto";
 
 interface RegisterState {
   errors?: {
@@ -54,7 +54,7 @@ export async function register(
 
     // Hash password securely
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userId = randomUUID();
+    const userId = null;
 
     // Insert new user into the database
     await db.execute({
