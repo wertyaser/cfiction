@@ -1,5 +1,6 @@
 import { Archivo } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -18,6 +19,7 @@ export default function RootLayout({
       <body className={archivo.className}>
         <Providers>
           <main>{children}</main>
+          <Toaster />
         </Providers>
       </body>
     </html>
