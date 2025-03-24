@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { register } from "@/actions/validation";
+import { register, RegisterState } from "@/actions/validation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Banner from "@/components/ui/cbanner";
 import { Label } from "@/components/ui/label";
@@ -10,16 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
-// Define the type for state
-interface RegisterState {
-  errors?: {
-    email?: string[];
-    password?: string[];
-    confirmPassword?: string[];
-  };
-  email?: string;
-  success?: boolean;
-}
+// Define the type for state and action
 
 export default function Register() {
   const [state, action] = useActionState<RegisterState | undefined, FormData>(
