@@ -12,13 +12,20 @@ import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 // Define the type for state and action
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button disabled={pending} type="submit">
+      {pending ? "Registering..." : "Register"}
+    </Button>
+  );
+}
+
 export default function Register() {
   const [state, action] = useActionState<RegisterState | undefined, FormData>(
     register,
     undefined
   );
-
-  const { pending } = useFormStatus();
 
   const router = useRouter();
   if (state?.success) {
@@ -76,9 +83,7 @@ export default function Register() {
                     {state?.errors?.confirmPassword && (
                       <p className="error">{state.errors.confirmPassword}</p>
                     )}
-                    <Button disabled={pending} type="submit" className="w-full">
-                      {pending ? "Loading..." : "Register"}
-                    </Button>
+                    <SubmitButton />
                   </div>
                 </div>
                 <div className="mt-4 text-center text-sm">
