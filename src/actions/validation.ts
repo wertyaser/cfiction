@@ -5,11 +5,19 @@ import { db } from "@/db";
 import bcrypt from "bcryptjs";
 // import { randomUUID } from "crypto";
 
-interface RegisterState {
+export interface RegisterState {
   errors?: {
     email?: string[];
     password?: string[];
     confirmPassword?: string[];
+    form?: string[];
+  };
+  success?: boolean;
+}
+
+export interface EmailState {
+  errors?: {
+    email?: string[];
     form?: string[];
   };
   success?: boolean;
@@ -65,6 +73,49 @@ export async function register(
     return { success: true };
   } catch (error) {
     console.error("Registration error:", error);
+    if (error instanceof Error) {
+      return { errors: { form: [error.message] } };
+    }
+    return { errors: { form: ["An unexpected error occurred."] } };
+  }
+}
+
+export async function forgotPassword(
+  prevState: EmailState | undefined,
+  formData: FormData
+): Promise<EmailState> {
+  try {
+    const email = formData.get("email") as string | null;
+
+    // Ensure email is provided
+    if (!email) {
+      return { errors: { form: ["Email is required."] } };
+    }
+
+    // Validate input using Zod schema
+    const validatedFields = RegisterFormSchema.safeParse({
+      email,
+    });
+
+    if (!validatedFields.success) {
+      return {
+        errors: validatedFields.error.flatten().fieldErrors,
+      };
+    }
+
+    // Check if user exists
+    const existingUser = await db.execute({
+      sql: "SELECT id FROM users WHERE email = ? LIMIT 1",
+      args: [email],
+    });
+
+    if (existingUser.rows.length === 0) {
+      return { errors: { email: ["Email is not registered."] } };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Forgot password error:", error);
     if (error instanceof Error) {
       return { errors: { form: [error.message] } };
     }
