@@ -1,14 +1,17 @@
 import { z } from "zod";
 
+export const ForgotPassword = z.object({
+  email: z
+    .string()
+    .email({ message: "Please enter a valid email." })
+    .regex(/@rtu.edu.ph$/, {
+      message: "RTU email only",
+    })
+    .trim(),
+});
+
 export const RegisterFormSchema = z
   .object({
-    email: z
-      .string()
-      .email({ message: "Please enter a valid email. " })
-      .regex(/@rtu.edu.ph$/, {
-        message: "RTU email only",
-      })
-      .trim(),
     password: z
       .string()
       .min(1, { message: "password is required" })
@@ -25,6 +28,7 @@ export const RegisterFormSchema = z
       .trim(),
     confirmPassword: z.string().trim(),
   })
+  .merge(ForgotPassword)
   .superRefine((val, ctx) => {
     if (val.password !== val.confirmPassword) {
       ctx.addIssue({
@@ -34,13 +38,3 @@ export const RegisterFormSchema = z
       });
     }
   });
-
-export const ForgotPassword = z.object({
-  email: z
-    .string()
-    .email({ message: "Please enter a valid email." })
-    .regex(/@rtu.edu.ph$/, {
-      message: "RTU email only",
-    })
-    .trim(),
-});
