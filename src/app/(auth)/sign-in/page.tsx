@@ -97,7 +97,7 @@ export default function SignIn() {
               </div>
               <div className="grid mt-4 text-center text-sm">
                 <Link
-                  href="#"
+                  href="/forgot-password"
                   className="inline-block text-sm underline-offset-4 hover:underline"
                 >
                   Forgot your password?
