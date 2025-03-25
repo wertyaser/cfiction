@@ -2,37 +2,60 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-// Define type for book data
+// Define interface for book data
 interface Book {
   title: string;
   author: string;
-  coverImage: string;
-  bookUrl: string;
   bookId: string;
+  bookUrl: string;
+  downloadUrl: string;
 }
 
 export async function GET(req: Request): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("query");
-    if (!query)
+
+    if (!query) {
       return NextResponse.json({ error: "Query is required" }, { status: 400 });
+    }
 
     const url = `https://www.gutenberg.org/ebooks/search/?query=${encodeURIComponent(
       query
     )}`;
+
     const { data: html } = await axios.get<string>(url);
     const $ = cheerio.load(html);
     const books: Book[] = [];
 
-    $(".booklink").each((index, element) => {
-      const title = $(element).find(".title").text().trim();
-      const author = $(element).find(".subtitle").text().trim();
-      const bookId = $(element).attr("href")?.match(/\d+/)?.[0] || "";
-      const coverImage = `https://www.gutenberg.org/cache/epub/${bookId}/pg${bookId}.cover.medium.jpg`;
-      const bookUrl = `https://www.gutenberg.org/ebooks/${bookId}`;
+    $(".booklink").each((index: number, element) => {
+      if (index >= 10) return false; // Limit results to 10 books
 
-      books.push({ title, author, coverImage, bookUrl, bookId });
+      const title: string = $(element).find(".title").text().trim();
+      const author: string = $(element).find(".subtitle").text().trim();
+      const bookHref = $(element).find("a").attr("href"); // Find actual <a> tag
+
+      if (!bookHref) {
+        console.error("Missing book link for:", title);
+        return; // Skip entry if href is missing
+      }
+
+      // Extract only the numeric book ID
+      const bookIdMatch = bookHref.match(/\/ebooks\/(\d+)/);
+      const bookId = bookIdMatch ? bookIdMatch[1] : "";
+
+      if (!bookId) {
+        console.error("Failed to extract bookId for:", title);
+        return; // Skip this book if ID is missing
+      }
+
+      books.push({
+        title,
+        author,
+        bookId,
+        bookUrl: `https://www.gutenberg.org/ebooks/${bookId}`,
+        downloadUrl: `https://www.gutenberg.org/ebooks/${bookId}.epub.images`,
+      });
     });
 
     return NextResponse.json(books);
