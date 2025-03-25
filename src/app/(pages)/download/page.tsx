@@ -1,10 +1,9 @@
 "use client";
 import { useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function DownloadPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const title = searchParams.get("title");
   const url = searchParams.get("url");
 
