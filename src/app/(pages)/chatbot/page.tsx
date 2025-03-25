@@ -2,7 +2,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/app-sidebar";
 import AiChatbot from "@/components/ai-chatbot";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EbookFinder from "@/components/ebook-finder";
+// import EbookFinder from "@/components/ebook-finder";
+import BookSearch from "./ebook-search";
 
 export default function ChatBot() {
   return (
@@ -21,7 +22,7 @@ export default function ChatBot() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="ebook">
-              <EbookFinder />
+              <BookSearch />
             </TabsContent>
             <TabsContent value="chatbot">
               <AiChatbot />
