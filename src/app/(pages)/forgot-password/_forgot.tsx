@@ -7,8 +7,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
 import { useActionState, useEffect } from "react";
 import { forgotPassword, EmailState } from "@/actions/validation";
 import { useToast } from "@/hooks/use-toast";
@@ -18,7 +16,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button disabled={pending} type="submit">
-      {pending ? "Sending..." : "Reset Password"}
+      {pending ? "Sending..." : "Submit"}
     </Button>
   );
 }
@@ -53,37 +51,29 @@ export default function ForgotPassword() {
 
   return (
     <div>
-      <Button asChild variant="outline" className="ml-4 mt-4">
-        <Link href="/">
-          <ChevronLeft />
-          Home
-        </Link>
-      </Button>
-      <div className="flex flex-col items-center justify-center gap-16">
-        <Card className=" w-full max-w-3xl">
-          <CardHeader>
-            <h1 className="text-2xl text-center">Forgot Password</h1>
-            <CardDescription className="text-center">
-              Enter your email address below and we&apos;ll send you a link to
-              reset your password.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form action={action} className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Enter your email address"
-                  required
-                />
-              </div>
-              <SubmitButton />
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className=" w-full max-w-3xl">
+        <CardHeader>
+          <h1 className="text-2xl text-center">Forgot Password</h1>
+          <CardDescription className="text-center">
+            Enter your email address below and we&apos;ll send you a link to
+            reset your password.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={action} className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+              />
+            </div>
+            <SubmitButton />
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
