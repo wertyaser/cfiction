@@ -7,6 +7,8 @@ import bcrypt from "bcryptjs";
 
 export interface RegisterState {
   errors?: {
+    firstName?: string[];
+    lastName?: string[];
     email?: string[];
     password?: string[];
     confirmPassword?: string[];
@@ -28,17 +30,22 @@ export async function register(
   formData: FormData
 ): Promise<RegisterState> {
   try {
+    const firstName = formData.get("firstName") as string | null;
+    const lastName = formData.get("lastName") as string | null;
+    const name = firstName + " " + lastName;
     const email = formData.get("email") as string | null;
     const password = formData.get("password") as string | null;
     const confirmPassword = formData.get("confirmPassword") as string | null;
 
     // Ensure all fields are provided
-    if (!email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       return { errors: { form: ["All fields are required."] } };
     }
 
     // Validate input using Zod schema
     const validatedFields = RegisterFormSchema.safeParse({
+      firstName,
+      lastName,
       email,
       password,
       confirmPassword,
@@ -62,12 +69,11 @@ export async function register(
 
     // Hash password securely
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userId = null;
 
     // Insert new user into the database
     await db.execute({
-      sql: "INSERT INTO users (id, email, password, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)",
-      args: [userId, email, hashedPassword],
+      sql: "INSERT INTO users (email, password, name,  created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)",
+      args: [email, hashedPassword, name],
     });
 
     return { success: true };
