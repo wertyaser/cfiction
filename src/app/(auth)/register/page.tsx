@@ -46,6 +46,16 @@ export default function Register() {
               <form action={action}>
                 <div className="flex flex-col gap-3">
                   <div className="grid gap-2">
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input type="text" name="firstName" />
+                      </div>
+                      <div>
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input type="text" name="lastName" />
+                      </div>
+                    </div>
                     <Label htmlFor="email">Email</Label>
                     <Input
                       name="email"
