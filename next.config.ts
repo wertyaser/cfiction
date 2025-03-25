@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
         hostname: "archive.org",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.gutenberg.org",
+        pathname: "/**",
+      },
     ],
   },
 };
