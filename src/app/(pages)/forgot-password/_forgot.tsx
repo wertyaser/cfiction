@@ -50,30 +50,28 @@ export default function ForgotPassword() {
   }, [state, toast]);
 
   return (
-    <div>
-      <Card className=" w-full max-w-3xl">
-        <CardHeader>
-          <h1 className="text-2xl text-center">Forgot Password</h1>
-          <CardDescription className="text-center">
-            Enter your email address below and we&apos;ll send you a link to
-            reset your password.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form action={action} className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1">
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Enter your email address"
-                required
-              />
-            </div>
-            <SubmitButton />
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="w-full max-w-3xl">
+      <CardHeader>
+        <h1 className="text-2xl text-center">Forgot Password</h1>
+        <CardDescription className="text-center">
+          Enter your email address below and we&apos;ll send you a link to reset
+          your password.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form action={action} className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email address"
+              required
+            />
+          </div>
+          <SubmitButton />
+        </form>
+      </CardContent>
+    </Card>
   );
 }
