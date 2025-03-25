@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import {
@@ -14,55 +14,98 @@ import { Separator } from "@/components/ui/separator";
 // import { ChatInput } from "@/components/ui/chat/chat-input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "./ui/textarea";
+// import ReactMarkdown from "react-markdown";
 
 export default function AiChatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
-    []
+    [
+      {
+        role: "assistant",
+        content: "Hello there! I'm a cfiction. How can I help you?",
+      },
+    ]
   );
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Load message from localStorage on mount
-  React.useEffect(() => {
-    const savedMessages = localStorage.getItem("chatHistory");
-    if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
-    }
-  }, []);
-
-  // Save messages to localStorage whenever they change
-  React.useEffect(() => {
-    localStorage.setItem("chatHistory", JSON.stringify(messages));
-  }, [messages]);
-
-  const sendMessage = async () => {
+  const handleSubmit = async () => {
     if (!inputValue.trim()) return;
+
+    // Add user message to the chat
+    const userMessage = { role: "user", content: inputValue };
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
     setLoading(true);
 
-    const userMessage = { role: "user", content: inputValue };
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
-    setInputValue("");
-
     try {
+      //Send the Message to the API
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
-
       const data = await res.json();
-      setMessages([...newMessages, { role: "bot", content: data.message }]);
-    } catch (error) {
-      console.error("Error:", error);
-      setMessages([
-        ...newMessages,
-        { role: "bot", content: "Failed to get a response." },
-      ]);
-    }
 
-    setLoading(false);
+      if (data.messages) {
+        // Update the chat with the response from the API
+        setMessages(data.messages);
+      } else {
+        //
+        const errorMessage = {
+          role: "assistant",
+          content: "Sorry, I couldn't get a response. Please try again later.",
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
+    } catch (error) {
+      console.error("Error fetching ai response:", error);
+      const errorMessage = {
+        role: "assistant",
+        content: "Sorry, I couldn't get a response. Please try again later.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+  // Save messages to localStorage whenever they change
+
+  // const sendMessage = async () => {
+  //   if (!inputValue.trim()) return;
+  //   setLoading(true);
+
+  //   const userMessage = { role: "user", content: inputValue };
+  //   const newMessages = [...messages, userMessage];
+  //   setMessages(newMessages);
+  //   setInputValue("");
+
+  //   try {
+  //     const res = await fetch("/api/chat", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ messages: newMessages }),
+  //     });
+
+  //     const data = await res.json();
+  //     setMessages([...newMessages, { role: "bot", content: data.message }]);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     setMessages([
+  //       ...newMessages,
+  //       { role: "bot", content: "Failed to get a response." },
+  //     ]);
+  //   }
+
+  //   setLoading(false);
+  // };
 
   return (
     <div className="flex justify-center items-center mt-5 border border-muted-foreground rounded-lg">
@@ -107,7 +150,7 @@ export default function AiChatbot() {
             />
 
             <Button
-              onClick={sendMessage}
+              onClick={handleSubmit}
               className="ml-auto gap-1.5 h-full"
               disabled={loading}
             >
