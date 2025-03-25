@@ -1,18 +1,3 @@
-// import React from "react";
-// // import { useState } from "react";
-// import { Card, CardContent } from "@/components/ui/card";
-// // import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-// // import {
-// //   ChatBubble,
-// //   ChatBubbleAvatar,
-// //   ChatBubbleMessage,
-// // } from "@/components/ui/chat/chat-bubble";
-// import { SendHorizontal } from "lucide-react";
-// import { Separator } from "@/components/ui/separator";
-// import { ChatInput } from "@/components/ui/chat/chat-input";
-// import { Button } from "@/components/ui/button";
-// // import { useEffect } from "react";
-
 // export default function EbookFinder() {
 //   // const [messages, setMessages] = useState<{ role: string; content: string }[]>(
 //   //   []
