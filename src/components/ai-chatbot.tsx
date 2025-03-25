@@ -9,7 +9,7 @@ import {
   ChatBubbleAvatar,
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
-import { SendHorizontal } from "lucide-react";
+import { Send } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 // import { ChatInput } from "@/components/ui/chat/chat-input";
 import { Button } from "@/components/ui/button";
@@ -121,7 +121,7 @@ export default function AiChatbot() {
                   variant={msg.role === "user" ? "sent" : "received"}
                 >
                   <ChatBubbleAvatar
-                    fallback={msg.role === "user" ? "Us" : "Ai"}
+                    fallback={msg.role === "user" ? "Us" : "AI"}
                   />
                   <ChatBubbleMessage>
                     <span className="text-sm">{msg.content}</span>
@@ -154,8 +154,7 @@ export default function AiChatbot() {
               className="ml-auto gap-1.5 h-full"
               disabled={loading}
             >
-              Send
-              <SendHorizontal className="h-5 w-5" />
+              <Send size={50} />
             </Button>
           </div>
         </CardContent>
