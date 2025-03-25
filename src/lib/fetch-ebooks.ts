@@ -5,12 +5,12 @@ export interface Book {
   };
 }
 
+const apiUrl = "https://openlibrary.org";
+
 export const fetchBooks = async (query: string): Promise<Book[]> => {
   if (!query) return [];
   try {
-    const response = await fetch(
-      `https://openlibrary.org/search/inside.json?q=${query}`
-    );
+    const response = await fetch(`${apiUrl}/search/inside.json?q=${query}`);
     const data = await response.json();
     return data.hits?.hits || [];
   } catch (error) {
