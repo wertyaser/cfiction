@@ -1,26 +1,38 @@
 "use client";
 import { useState } from "react";
-// import { useRouter } from "next/navigation";
+import { Book } from "../../api/search/route";
+import { Search } from "lucide-react";
 
-// Define Book interface
-interface Book {
-  title: string;
-  author: string;
-  bookId: string;
-  downloadUrl: string;
-}
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
+// import { useRouter } from "next/navigation";
 
 export default function BookSearch() {
   const [query, setQuery] = useState<string>("");
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedSources, setSelectedSources] = useState<string[]>([
+    "gutenberg",
+    "openlibrary",
+  ]);
   //   const router = useRouter();
 
   const searchBooks = async (): Promise<void> => {
+    if (!query.trim()) return;
+
     try {
       setIsLoading(true);
-      const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
-      const data = (await res.json()) as Book[];
+      const sourcesParam = selectedSources.join(",");
+      const res = await fetch(
+        `/api/search?query=${encodeURIComponent(query)}&sources=${sourcesParam}`
+      );
+      const data = await res.json();
       setBooks(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Search error:", error);
@@ -42,36 +54,156 @@ export default function BookSearch() {
     window.open(book.downloadUrl, "_blank");
   };
 
-  return (
-    <div className="p-6">
-      <input
-        type="text"
-        placeholder="Search for books..."
-        className="border p-2 w-full"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && searchBooks()}
-      />
-      <button
-        onClick={searchBooks}
-        className="bg-blue-500 text-white p-2 mt-2"
-        disabled={isLoading}
-      >
-        {isLoading ? "Searching..." : "Search"}
-      </button>
+  const handleSourceToggle = (source: string) => {
+    setSelectedSources((prev) =>
+      prev.includes(source)
+        ? prev.filter((s) => s !== source)
+        : [...prev, source]
+    );
+  };
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        {books.map((book) => (
-          <div
-            key={book.bookId || book.title}
-            className="border p-2 cursor-pointer"
-            onClick={() => handleBookClick(book)}
-          >
-            <h3 className="text-lg font-bold">{book.title}</h3>
-            <p className="text-sm">{book.author}</p>
+  function getSourceVariant(
+    source: string | undefined
+  ): "default" | "outline" | "secondary" | "destructive" {
+    switch (source) {
+      case "Project Gutenberg":
+        return "default";
+      case "Open Library":
+        return "secondary";
+      // case "Standard Ebooks":
+      //   return "bg-purple-100 text-purple-800";
+      default:
+        return "default";
+    }
+  }
+
+  return (
+    <div className="container py-8 mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Multi-Source Book Search</h1>
+
+      <div className="space-y-4 mb-8">
+        <div className="flex flex-wrap gap-6">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="gutenberg"
+              checked={selectedSources.includes("gutenberg")}
+              onCheckedChange={() => handleSourceToggle("gutenberg")}
+            />
+            <Label htmlFor="gutenberg">Project Gutenberg</Label>
           </div>
-        ))}
+
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="openlibrary"
+              checked={selectedSources.includes("openlibrary")}
+              onCheckedChange={() => handleSourceToggle("openlibrary")}
+            />
+            <Label htmlFor="openlibrary">Open Library</Label>
+          </div>
+
+          {/* For z-library */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="standardebooks"
+              checked={selectedSources.includes("standardebooks")}
+              onCheckedChange={() => handleSourceToggle("standardebooks")}
+            />
+            <Label htmlFor="standardebooks">Standard Ebooks</Label>
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <div className="relative flex-grow">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search for books..."
+              className="pl-8"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && searchBooks()}
+            />
+          </div>
+          <Button onClick={searchBooks} disabled={isLoading || !query.trim()}>
+            {isLoading ? "Searching..." : "Search"}
+          </Button>
+        </div>
       </div>
+
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Card key={i} className="overflow-hidden">
+              <div className="flex h-full">
+                <div className="w-1/3 p-3">
+                  <Skeleton className="h-40 w-full" />
+                </div>
+                <div className="w-2/3 p-4 space-y-3">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : books.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {books.map((book, index) => (
+            <Card
+              key={`${book.source || "unknown"}-${book.bookId || index}`}
+              className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => handleBookClick(book)}
+            >
+              <CardContent className="p-0">
+                <div className="flex h-full">
+                  <div className="w-1/3 bg-muted flex items-center justify-center p-3">
+                    {book.coverUrl ? (
+                      <Image
+                        width={200}
+                        height={300}
+                        src={book.coverUrl || "/placeholder.svg"}
+                        alt={`Cover for ${book.title}`}
+                        className="max-h-40 object-contain"
+                      />
+                    ) : (
+                      <div className="w-full h-40 bg-muted-foreground/10 flex items-center justify-center">
+                        <span className="text-muted-foreground text-sm">
+                          No Cover
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-2/3 p-4">
+                    <Badge
+                      variant={getSourceVariant(book.source)}
+                      className="mb-2"
+                    >
+                      {book.source || "Unknown Source"}
+                    </Badge>
+                    <h3 className="text-lg font-bold line-clamp-2 mb-1">
+                      {book.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {book.author}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="bg-muted/30 py-2 px-4 text-xs text-primary">
+                Click to download
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        query && (
+          <p className="text-center py-8 text-muted-foreground">
+            No books found. Try a different search term.
+          </p>
+        )
+      )}
     </div>
   );
 }
