@@ -11,6 +11,7 @@ export interface Book {
   downloadUrl: string;
   coverUrl?: string;
   source?: string;
+  fileFormat?: string;
 }
 
 export interface OpenLibraryDoc {
@@ -37,7 +38,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     let books: Book[] = [];
     const sourcesToSearch =
       sources === "all"
-        ? ["gutenberg", "openlibrary", "standardebooks"]
+        ? ["gutenberg", "openlibrary", "archive"]
         : sources.split(",");
 
     const searchPromises = sourcesToSearch.map(async (source) => {
@@ -46,8 +47,8 @@ export async function GET(req: Request): Promise<NextResponse> {
           return searchGutenberg(query);
         case "openlibrary":
           return searchOpenLibrary(query);
-        // case "zlibrary":
-        //   return searchZLibrary(query);
+        case "archive":
+          return searchInternetArchive(query);
         default:
           return Promise.resolve([]);
       }
@@ -153,4 +154,91 @@ async function searchOpenLibrary(query: string): Promise<Book[]> {
   }
 }
 
-// // Search Z-Library for books
+// Search Internet Archive using their official API
+async function searchInternetArchive(query: string): Promise<Book[]> {
+  try {
+    // Using Internet Archive's Advanced Search API
+    // Documentation: https://archive.org/advancedsearch.php
+    const searchUrl = `https://archive.org/advancedsearch.php?q=${encodeURIComponent(
+      `title:(${query}) AND mediatype:(texts)`
+    )}&fl[]=identifier,title,creator,date,description,subject,mediatype,collection&rows=10&output=json`;
+
+    const { data } = await axios.get(searchUrl);
+    const books: Book[] = [];
+
+    if (
+      data &&
+      data.response &&
+      data.response.docs &&
+      Array.isArray(data.response.docs)
+    ) {
+      for (const item of data.response.docs) {
+        if (!item.identifier) continue;
+
+        // Get metadata for this specific item to get download links
+        const metadataUrl = `https://archive.org/metadata/${item.identifier}`;
+        const metadataResponse = await axios.get(metadataUrl);
+        const metadata = metadataResponse.data;
+
+        // Find a suitable download format (prefer PDF, EPUB, or any available format)
+        let downloadUrl = `https://archive.org/details/${item.identifier}`;
+        let fileFormat = "";
+
+        if (metadata && metadata.files && Array.isArray(metadata.files)) {
+          // Look for PDF or EPUB files
+          const pdfFile = metadata.files.find(
+            (file: { name: string }) =>
+              file.name.endsWith(".pdf") && !file.name.includes("_text")
+          );
+
+          const epubFile = metadata.files.find((file: { name: string }) =>
+            file.name.endsWith(".epub")
+          );
+
+          if (pdfFile) {
+            downloadUrl = `https://archive.org/download/${item.identifier}/${pdfFile.name}`;
+            fileFormat = "PDF";
+          } else if (epubFile) {
+            downloadUrl = `https://archive.org/download/${item.identifier}/${epubFile.name}`;
+            fileFormat = "EPUB";
+          }
+        }
+
+        books.push({
+          title: item.title || "Unknown Title",
+          author: item.creator
+            ? Array.isArray(item.creator)
+              ? item.creator[0]
+              : item.creator
+            : "Unknown Author",
+          bookId: item.identifier,
+          bookUrl: `https://archive.org/details/${item.identifier}`,
+          downloadUrl,
+          source: "Internet Archive",
+          coverUrl: `https://archive.org/services/img/${item.identifier}`,
+          fileFormat,
+        });
+      }
+    }
+
+    return books;
+  } catch (error) {
+    console.error("Internet Archive search error:", error);
+    // Return a fallback if the API call fails
+    return [
+      {
+        title: "Search directly on Internet Archive",
+        author: "For more results, visit Internet Archive",
+        bookId: "archive-direct",
+        bookUrl: `https://archive.org/search?query=${encodeURIComponent(
+          query
+        )}`,
+        downloadUrl: `https://archive.org/search?query=${encodeURIComponent(
+          query
+        )}`,
+        source: "Internet Archive",
+        coverUrl: "https://archive.org/images/notfound.png",
+      },
+    ];
+  }
+}
