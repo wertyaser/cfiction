@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Book } from "../../api/search/route";
-import { Search } from "lucide-react";
+import { Search, FileText, Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,12 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 // import { useRouter } from "next/navigation";
 
 export default function BookSearch() {
@@ -20,6 +26,7 @@ export default function BookSearch() {
   const [selectedSources, setSelectedSources] = useState<string[]>([
     "gutenberg",
     "openlibrary",
+    "archive",
   ]);
   //   const router = useRouter();
 
@@ -70,17 +77,16 @@ export default function BookSearch() {
         return "default";
       case "Open Library":
         return "secondary";
-      // case "Standard Ebooks":
-      //   return "bg-purple-100 text-purple-800";
+      case "Internet Archive":
+        return "destructive";
       default:
         return "default";
     }
   }
 
   return (
-    <div className="container py-8 mx-auto">
+    <div className="container py-8">
       <h1 className="text-3xl font-bold mb-6">Multi-Source Book Search</h1>
-
       <div className="space-y-4 mb-8">
         <div className="flex flex-wrap gap-6">
           <div className="flex items-center space-x-2">
@@ -101,14 +107,14 @@ export default function BookSearch() {
             <Label htmlFor="openlibrary">Open Library</Label>
           </div>
 
-          {/* For z-library */}
+          {/* For Internet archive */}
           <div className="flex items-center space-x-2">
             <Checkbox
-              id="standardebooks"
-              checked={selectedSources.includes("standardebooks")}
-              onCheckedChange={() => handleSourceToggle("standardebooks")}
+              id="archive"
+              checked={selectedSources.includes("archive")}
+              onCheckedChange={() => handleSourceToggle("archive")}
             />
-            <Label htmlFor="standardebooks">Standard Ebooks</Label>
+            <Label htmlFor="archive">Internet Archive</Label>
           </div>
         </div>
 
@@ -188,11 +194,27 @@ export default function BookSearch() {
                     <p className="text-sm text-muted-foreground mb-2">
                       {book.author}
                     </p>
+                    {book.fileFormat && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center text-xs text-muted-foreground">
+                              <FileText className="h-3 w-3 mr-1" />
+                              {book.fileFormat}
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Available in {book.fileFormat} format</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="bg-muted/30 py-2 px-4 text-xs text-primary">
-                Click to download
+              <CardFooter className="bg-muted/30 py-2 px-4 text-xs text-primary flex justify-between items-center">
+                <span>Click to download</span>
+                <Download className="h-3 w-3" />
               </CardFooter>
             </Card>
           ))}
