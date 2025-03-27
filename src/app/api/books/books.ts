@@ -48,3 +48,48 @@ export async function saveBook(book: Book) {
     return { success: false, error };
   }
 }
+
+// Function to get downloaded books
+export async function getDownloadedBooks() {
+  try {
+    const result = await db.execute({
+      sql: `
+        SELECT bookId, title, downloadUrl, 
+        FROM books
+        ORDER BY created_at DESC
+      `,
+      args: [],
+    });
+
+    return result.rows.map((row) => ({
+      bookid: row.bookId,
+      title: row.title,
+      downloadurl: row.downloadUrl,
+    }));
+  } catch (error) {
+    console.error("Error fetching downloaded books:", error);
+    return [];
+  }
+}
+
+// Function to get search history
+export async function getSearchHistory() {
+  try {
+    const result = await db.execute({
+      sql: `
+        SELECT DISTINCT title, created_at
+        FROM books
+        ORDER BY created_at DESC
+      `,
+      args: [],
+    });
+
+    return result.rows.map((row) => ({
+      title: row.title,
+      created_at: row.created_at,
+    }));
+  } catch (error) {
+    console.error("Error fetching search history:", error);
+    return [];
+  }
+}
