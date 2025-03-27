@@ -20,8 +20,8 @@ export default function AiChatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
     [
       {
-        role: "assistant",
-        content: "Hello there! I'm a cfiction. How can I help you?",
+        role: "assis",
+        content: "Hi! I'm Ctrl, your AI Librarian. How can I help you today?",
       },
     ]
   );
@@ -70,6 +70,14 @@ export default function AiChatbot() {
     }
   };
 
+  // Handle Enter key press
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -110,10 +118,10 @@ export default function AiChatbot() {
   return (
     <div className="flex justify-center items-center mt-5 border border-muted-foreground rounded-lg">
       {/* Card: Responsive width, fixed height */}
-      <Card className=" h-[90vh] w-full max-w-5xl md:w-[1000px] sm:w-[900px] shadow-xl bg-background">
+      <Card className=" h-[90vh] w-full max-w-5xl md:w-[760px] sm:w-[900px] shadow-xl bg-background">
         <CardContent className="p-6 h-full flex flex-col">
           {/* Scrollable message list */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto mb-2" ref={chatContainerRef}>
             <ChatMessageList>
               {messages.map((msg, index) => (
                 <ChatBubble
@@ -121,7 +129,7 @@ export default function AiChatbot() {
                   variant={msg.role === "user" ? "sent" : "received"}
                 >
                   <ChatBubbleAvatar
-                    fallback={msg.role === "user" ? "Us" : "AI"}
+                    fallback={msg.role === "user" ? "US" : "AI"}
                   />
                   <ChatBubbleMessage>
                     <span className="text-sm">{msg.content}</span>
@@ -130,8 +138,8 @@ export default function AiChatbot() {
               ))}
 
               {loading && (
-                <ChatBubble variant="received">
-                  <ChatBubbleAvatar fallback="AI" />
+                <ChatBubble variant="received" className="mb-2 sm:mb-3">
+                  <ChatBubbleAvatar fallback="AI" className="hidden sm:flex" />
                   <ChatBubbleMessage isLoading />
                 </ChatBubble>
               )}
@@ -141,12 +149,13 @@ export default function AiChatbot() {
           <Separator className="my-2" />
 
           {/* Chat Input */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Textarea
               placeholder="Type your message here!"
-              className="flex-grow rounded-r-none min-h-12 resize-none bg-background border-0 p-4 shadow-none focus-visible:ring-0"
+              className="flex-grow min-h-12 h-12 sm:min-h-14 resize-none bg-background border p-2 sm:p-3 rounded-lg"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
 
             <Button
@@ -154,7 +163,7 @@ export default function AiChatbot() {
               className="ml-auto gap-1.5 h-full"
               disabled={loading}
             >
-              <Send size={50} />
+              <Send size={50} className="sm:size-5 md:size-6" />
             </Button>
           </div>
         </CardContent>
