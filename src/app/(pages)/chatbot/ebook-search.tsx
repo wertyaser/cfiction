@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { toast } from "@/hooks/use-toast";
 // import { useRouter } from "next/navigation";
 
 export default function BookSearch() {
@@ -49,16 +50,35 @@ export default function BookSearch() {
     }
   };
 
-  const handleBookClick = (book: Book): void => {
-    console.log("Clicked Book:", book); // Log the full book object
-    console.log(`Downloading: ${book.title}, ID: ${book.bookId}`);
+  const handleBookClick = async (book: Book): Promise<void> => {
+    try {
+      //save the book to the database
+      const response = await fetch("/api/books/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(book),
+      });
+      if (response.ok) {
+        toast({
+          title: "Book saved",
+          description: `"${book.title}" has been saved to your downloads.`,
+        });
+      } else {
+        console.error("Failed to save book");
+      }
 
-    if (!book.bookId) {
-      console.error("Error: bookId is missing!");
-      return;
+      // Open the download URL in a new tab
+      window.open(book.downloadUrl, "_blank");
+    } catch (error) {
+      console.error("Error saving book", error);
+      toast({
+        title: "Error",
+        description: "Failed to save the book. Please try again.",
+        variant: "destructive",
+      });
     }
-
-    window.open(book.downloadUrl, "_blank");
   };
 
   const handleSourceToggle = (source: string) => {
