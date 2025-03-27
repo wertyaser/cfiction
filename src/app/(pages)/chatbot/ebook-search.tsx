@@ -96,7 +96,7 @@ export default function BookSearch() {
       case "Project Gutenberg":
         return "default";
       case "Open Library":
-        return "secondary";
+        return "outline";
       case "Internet Archive":
         return "destructive";
       default:
@@ -115,7 +115,9 @@ export default function BookSearch() {
               checked={selectedSources.includes("gutenberg")}
               onCheckedChange={() => handleSourceToggle("gutenberg")}
             />
-            <Label htmlFor="gutenberg">Project Gutenberg</Label>
+            <Badge variant={"default"}>
+              <Label htmlFor="gutenberg">Project Gutenberg</Label>
+            </Badge>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -124,7 +126,9 @@ export default function BookSearch() {
               checked={selectedSources.includes("openlibrary")}
               onCheckedChange={() => handleSourceToggle("openlibrary")}
             />
-            <Label htmlFor="openlibrary">Open Library</Label>
+            <Badge variant={"outline"}>
+              <Label htmlFor="openlibrary">Open Library</Label>
+            </Badge>
           </div>
 
           {/* For Internet archive */}
@@ -134,7 +138,9 @@ export default function BookSearch() {
               checked={selectedSources.includes("archive")}
               onCheckedChange={() => handleSourceToggle("archive")}
             />
-            <Label htmlFor="archive">Internet Archive</Label>
+            <Badge variant={"destructive"}>
+              <Label htmlFor="archive">Internet Archive</Label>
+            </Badge>
           </div>
         </div>
 
