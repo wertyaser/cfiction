@@ -1,6 +1,6 @@
 "use client";
 // import { useState } from "react";
-import { Files, Settings, LogOut, Search, User } from "lucide-react";
+import { Files, Settings, LogOut, Search } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +29,8 @@ import { Label } from "./ui/label";
 import { DownloadedBook, SearchHistoryItem } from "@/types/next-auth";
 import { useState } from "react";
 // import { url } from "inspector";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const items = [
   {
@@ -98,16 +100,21 @@ const items = [
 //   },
 // ];
 
-const accountDetails = [
-  {
-    id: 1,
-    img: User,
-    name: "Leoniel Nacman",
-    email: "2021-102673@rtu.edu.ph",
-    password: "",
-  },
-];
+// const accountDetails = [
+//   {
+//     id: 1,
+//     img: User,
+//     name: "Leoniel Nacman",
+//     email: "2021-102673@rtu.edu.ph",
+//     password: "",
+//   },
+// ];
+
 export default function AppSidebar() {
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
+  const userName = session?.user?.name;
+  const userImage = session?.user?.image;
   const [openSheet, setOpenSheet] = useState<string | null>(null);
 
   // State for downloaded books and search history
@@ -305,40 +312,39 @@ export default function AppSidebar() {
                         {/* TODO: FETCH ACC DETAILS LIKE IN HEADER */}
                         {item.title === "Account Details" && (
                           <ul className="mt-4 space-y-2">
-                            {accountDetails.map((index) => (
-                              <div
-                                key={index.id}
-                                className="flex flex-col items-center justify-center gap-2"
-                              >
-                                <index.img size={100} />
-                                <div className="flex flex-col gap-4 w-full">
-                                  <div>
-                                    <Label>Name</Label>
-                                    <Input type="text" value={index.name} />
-                                  </div>
-                                  <div>
-                                    <Label>Email</Label>
-                                    <Input type="email" value={index.email} />
-                                  </div>
-                                  <div>
-                                    <Label>Password</Label>
-                                    <Input
-                                      type="password"
-                                      value={index.password}
-                                      placeholder="*********"
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label>Confirm Password</Label>
-                                    <Input
-                                      type="password"
-                                      placeholder="*********"
-                                    />
-                                  </div>
-                                  <Button type="submit">Save Changes</Button>
+                            <div className="flex flex-col items-center justify-center gap-2">
+                              <Avatar>
+                                <AvatarImage src={userImage || undefined} />
+                                <AvatarFallback>
+                                  {userName?.slice(0, 2).toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex flex-col gap-4 w-full">
+                                <div>
+                                  <Label>Name</Label>
+                                  <Input type="text" value={userName || ""} />
                                 </div>
+                                <div>
+                                  <Label>Email</Label>
+                                  <Input type="email" value={userEmail || ""} />
+                                </div>
+                                <div>
+                                  <Label>Password</Label>
+                                  <Input
+                                    type="password"
+                                    placeholder="*********"
+                                  />
+                                </div>
+                                <div>
+                                  <Label>Confirm Password</Label>
+                                  <Input
+                                    type="password"
+                                    placeholder="*********"
+                                  />
+                                </div>
+                                <Button type="submit">Save Changes</Button>
                               </div>
-                            ))}
+                            </div>
                           </ul>
                         )}
                       </SheetDescription>
