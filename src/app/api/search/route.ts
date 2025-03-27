@@ -1,29 +1,8 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 import * as cheerio from "cheerio";
-
+import { Book, OpenLibraryDoc } from "@/types/next-auth";
 // Define interface for book data
-export interface Book {
-  title: string;
-  author: string;
-  bookId: string;
-  bookUrl: string;
-  downloadUrl: string;
-  coverUrl?: string;
-  source?: string;
-  fileFormat?: string;
-}
-
-export interface OpenLibraryDoc {
-  key: string;
-  title?: string;
-  author_name?: string[];
-  cover_i?: number;
-  first_publish_year?: number;
-  language?: string[];
-  ebook_access?: string;
-  ia?: string[];
-}
 
 export async function GET(req: Request): Promise<NextResponse> {
   try {
