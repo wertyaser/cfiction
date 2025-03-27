@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Book } from "../../api/search/route";
+import { Book } from "@/types/next-auth";
 import { Search, FileText, Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
