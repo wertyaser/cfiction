@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/db";
 import type { Book } from "@/types/next-auth";
 
@@ -54,7 +56,7 @@ export async function getDownloadedBooks() {
   try {
     const result = await db.execute({
       sql: `
-        SELECT bookId, title, downloadUrl, 
+        SELECT bookId, title, downloadUrl 
         FROM books
         ORDER BY created_at DESC
       `,
