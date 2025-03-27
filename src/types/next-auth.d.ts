@@ -32,3 +32,16 @@ export interface OpenLibraryDoc {
   ebook_access?: string;
   ia?: string[];
 }
+
+export interface DownloadedBook {
+  bookid: string;
+  title: string;
+  bookurl: string;
+  downloadurl: string;
+  created_at: string;
+}
+
+export interface SearchHistoryItem {
+  title: string;
+  created_at: string;
+}
