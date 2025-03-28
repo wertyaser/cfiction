@@ -1,10 +1,4 @@
-import {
-  Adapter,
-  AdapterUser,
-  AdapterSession,
-  AdapterAccount,
-  VerificationToken,
-} from "next-auth/adapters";
+import { Adapter, AdapterUser } from "next-auth/adapters";
 import { db } from "@/db";
 
 interface DbUser {
@@ -95,63 +89,6 @@ export function TursoAdapter(): Adapter {
         sql: "DELETE FROM users WHERE id = ?",
         args: [id],
       });
-    },
-
-    async linkAccount(account: AdapterAccount): Promise<void> {
-      // TODO: Implement account linking
-      console.log("Account linking not implemented:", account);
-    },
-
-    async unlinkAccount(account: AdapterAccount): Promise<void> {
-      // TODO: Implement account unlinking
-      console.log("Account unlinking not implemented:", account);
-    },
-
-    async createSession(session: AdapterSession): Promise<AdapterSession> {
-      // TODO: Implement session creation
-      console.log("Session creation not implemented:", session);
-      return session;
-    },
-
-    async getSessionAndUser(
-      sessionToken: string
-    ): Promise<{ session: AdapterSession; user: AdapterUser } | null> {
-      // TODO: Implement session retrieval
-      console.log("Session retrieval not implemented:", sessionToken);
-      return null;
-    },
-
-    async updateSession(
-      session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
-    ): Promise<AdapterSession | null> {
-      // TODO: Implement session update
-      console.log("Session update not implemented:", session);
-      return null;
-    },
-
-    async deleteSession(sessionToken: string): Promise<void> {
-      // TODO: Implement session deletion
-      console.log("Session deletion not implemented:", sessionToken);
-    },
-
-    async createVerificationToken(
-      verificationToken: VerificationToken
-    ): Promise<VerificationToken> {
-      // TODO: Implement verification token creation
-      console.log(
-        "Verification token creation not implemented:",
-        verificationToken
-      );
-      return verificationToken;
-    },
-
-    async useVerificationToken(params: {
-      identifier: string;
-      token: string;
-    }): Promise<VerificationToken | null> {
-      // TODO: Implement verification token usage
-      console.log("Verification token usage not implemented:", params);
-      return null;
     },
   };
 }
