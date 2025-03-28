@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { TursoAdapter } from "@/lib/turso-adapter";
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
+// import { randomBytes, randomUUID } from "crypto";
 
 interface DbUser {
   id: string;
