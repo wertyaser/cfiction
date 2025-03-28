@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 
 export default function SideHeader() {
   const { data: session } = useSession();
-  const userEmail = session?.user?.email || "Guest";
+  const userEmail = session?.user?.email;
   const userName = session?.user?.name;
   const userImage = session?.user?.image;
 
