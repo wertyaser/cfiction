@@ -50,66 +50,6 @@ const items = [
   },
 ];
 
-// const downloadedList = [
-//   {
-//     id: 1,
-//     title: "The Great Gatsby",
-//     icon: Files,
-//     url: "https://www.gutenberg.org/ebooks/64317",
-//   },
-//   {
-//     id: 2,
-//     title: "1984",
-//     icon: Files,
-//     url: "https://www.gutenberg.org/ebooks/1342",
-//   },
-//   {
-//     id: 3,
-//     title: "To Kill a Mockingbird",
-//     icon: Files,
-//     url: "https://www.gutenberg.org/ebooks/174",
-//   },
-//   {
-//     id: 4,
-//     title: "Pride and Prejudice",
-//     icon: Files,
-//     url: "https://www.gutenberg.org/ebooks/42671",
-//   },
-// ];
-
-// const searchList = [
-//   {
-//     id: 1,
-//     title: "The Great Gatsby",
-//     icon: Files,
-//   },
-//   {
-//     id: 2,
-//     title: "1984",
-//     icon: Files,
-//   },
-//   {
-//     id: 3,
-//     title: "To Kill a Mockingbird",
-//     icon: Files,
-//   },
-//   {
-//     id: 4,
-//     title: "Pride and Prejudice",
-//     icon: Files,
-//   },
-// ];
-
-// const accountDetails = [
-//   {
-//     id: 1,
-//     img: User,
-//     name: "Leoniel Nacman",
-//     email: "2021-102673@rtu.edu.ph",
-//     password: "",
-//   },
-// ];
-
 export default function AppSidebar() {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
@@ -296,7 +236,7 @@ export default function AppSidebar() {
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center gap-2">
                                         <Search className="w-4 h-4 text-muted-foreground" />
-                                        <span>{item.title}</span>
+                                        <span>{item.query}</span>
                                       </div>
                                       <span className="text-xs text-muted-foreground">
                                         {formatDate(item.created_at)}
