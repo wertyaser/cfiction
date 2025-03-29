@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Banner from "@/components/ui/cbanner";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,8 @@ import { useState } from "react";
 
 export default function SignIn() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/chatbot";
+  // const searchParams = useSearchParams();
+  // const callbackUrl = searchParams.get("callbackUrl") || "/chatbot";
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +31,6 @@ export default function SignIn() {
         email,
         password,
         redirect: false,
-        callbackUrl,
       });
 
       if (result?.error) {
