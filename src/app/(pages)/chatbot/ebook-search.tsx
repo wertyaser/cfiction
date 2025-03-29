@@ -111,7 +111,9 @@ export default function BookSearch() {
 
   return (
     <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-6">Multi-Source Book Search</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Ctrl+Fiction: Multi-Source EBook Search
+      </h1>
       <div className="space-y-4 mb-8">
         <div className="flex flex-wrap gap-6">
           <div className="flex items-center space-x-2">
@@ -154,7 +156,7 @@ export default function BookSearch() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Search for books..."
+              placeholder="Search for ebooks..."
               className="pl-8"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
