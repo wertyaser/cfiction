@@ -211,8 +211,11 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Theme</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="flex items-center justify-between">
-              <ThemeSwitch />
+            <SidebarMenu>
+              <div className="flex items-center px-2 py-1.5 justify-between">
+                <h1>Select theme: </h1>
+                <ThemeSwitch />
+              </div>
             </SidebarMenu>
           </SidebarGroupContent>
           <Separator className="my-3" />
