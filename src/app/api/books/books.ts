@@ -4,6 +4,7 @@ import { db } from "@/db";
 import type { Book } from "@/types/next-auth";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { randomUUID } from "crypto";
 
 async function getCurrentUserId() {
   const session = await getServerSession(authOptions);
@@ -93,6 +94,30 @@ export async function getDownloadedBooks() {
   }
 }
 
+// Function to save search query to history
+export async function saveSearchQuery(query: string) {
+  try {
+    // Get current user ID
+    const userId = await getCurrentUserId();
+
+    // Generate a unique ID for the search history entry
+    const id = randomUUID();
+
+    // Insert search query into the search_history table
+    await db.execute({
+      sql: `INSERT INTO search_history 
+            (id, userId, query, created_at) 
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
+      args: [id, userId, query],
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error saving search query", error);
+    return { success: false, error };
+  }
+}
+
 // Function to get search history
 export async function getSearchHistory() {
   try {
@@ -101,8 +126,8 @@ export async function getSearchHistory() {
 
     const result = await db.execute({
       sql: `
-        SELECT DISTINCT title, created_at
-        FROM books
+        SELECT DISTINCT id, query, created_at
+        FROM search_history
         WHERE userId = ?
         ORDER BY created_at DESC
       `,
@@ -110,7 +135,8 @@ export async function getSearchHistory() {
     });
 
     return result.rows.map((row) => ({
-      title: row.title,
+      id: row.id,
+      query: row.query,
       created_at: row.created_at,
     }));
   } catch (error) {
