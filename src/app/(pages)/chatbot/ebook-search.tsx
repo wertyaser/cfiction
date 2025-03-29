@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
+import { saveSearchQuery } from "@/app/api/books/books";
 // import { useRouter } from "next/navigation";
 
 export default function BookSearch() {
@@ -37,6 +38,10 @@ export default function BookSearch() {
     try {
       setIsLoading(true);
       const sourcesParam = selectedSources.join(",");
+
+      // Save the search query to history
+      await saveSearchQuery(query);
+
       const res = await fetch(
         `/api/search?query=${encodeURIComponent(query)}&sources=${sourcesParam}`
       );
