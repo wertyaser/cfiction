@@ -2,14 +2,27 @@
 
 import { db } from "@/db";
 import type { Book } from "@/types/next-auth";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+
+async function getCurrentUserId() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error("User not authenticated");
+  }
+  return session.user.id;
+}
 
 //function to save a book to the database
 export async function saveBook(book: Book) {
   try {
+    // Get the current user ID
+    const userId = await getCurrentUserId();
+
     //Check if the book already exists
     const existingBook = await db.execute({
-      sql: "SELECT bookId FROM books WHERE bookId = ?",
-      args: [book.bookId],
+      sql: "SELECT bookId FROM books WHERE bookId = ? AND userId = ?",
+      args: [book.bookId, userId],
     });
 
     if (existingBook.rows.length > 0) {
@@ -18,7 +31,7 @@ export async function saveBook(book: Book) {
         sql: `
             UPDATE books 
             SET title = ?, author = ?, bookUrl = ?, downloadUrl = ?, created_at = CURRENT_TIMESTAMP
-            WHERE bookId = ?
+            WHERE bookId = ? AND userId = ?
           `,
         args: [
           book.title,
@@ -26,14 +39,15 @@ export async function saveBook(book: Book) {
           book.bookUrl,
           book.downloadUrl,
           book.bookId,
+          userId,
         ],
       });
     } else {
       // Insert new book
       await db.execute({
         sql: `
-            INSERT INTO books (bookId, title, author, bookUrl, downloadUrl)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO books (bookId, title, author, bookUrl, downloadUrl, userId)
+            VALUES (?, ?, ?, ?, ?, ?)
           `,
         args: [
           book.bookId,
@@ -41,6 +55,7 @@ export async function saveBook(book: Book) {
           book.author,
           book.bookUrl,
           book.downloadUrl,
+          userId,
         ],
       });
     }
@@ -54,13 +69,17 @@ export async function saveBook(book: Book) {
 // Function to get downloaded books
 export async function getDownloadedBooks() {
   try {
+    // Get the current user ID
+    const userId = await getCurrentUserId();
+
     const result = await db.execute({
       sql: `
         SELECT bookId, title, downloadUrl 
         FROM books
+        WHERE userId = ? 
         ORDER BY created_at DESC
       `,
-      args: [],
+      args: [userId],
     });
 
     return result.rows.map((row) => ({
@@ -77,13 +96,17 @@ export async function getDownloadedBooks() {
 // Function to get search history
 export async function getSearchHistory() {
   try {
+    // Get the current user ID
+    const userId = await getCurrentUserId();
+
     const result = await db.execute({
       sql: `
         SELECT DISTINCT title, created_at
         FROM books
+        WHERE userId = ?
         ORDER BY created_at DESC
       `,
-      args: [],
+      args: [userId],
     });
 
     return result.rows.map((row) => ({
