@@ -42,6 +42,6 @@ export interface DownloadedBook {
 }
 
 export interface SearchHistoryItem {
-  title: string;
+  query: string;
   created_at: string;
 }
