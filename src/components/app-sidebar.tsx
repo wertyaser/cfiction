@@ -1,6 +1,6 @@
 "use client";
 // import { useState } from "react";
-import { Files, Settings, LogOut, Search } from "lucide-react";
+import { Files, Settings, LogOut, Search, LibraryBig } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -44,9 +44,32 @@ const items = [
     content: "Your recent searches will be displayed here.",
   },
   {
+    title: "Sources Description",
+    icon: LibraryBig,
+    content: "Here you can find the details about the sources of your books.",
+  },
+  {
     title: "Account Details",
     icon: Settings,
     content: "Manage your account settings here.",
+  },
+];
+
+const sources = [
+  {
+    name: "Project Gutenberg",
+    description:
+      "Project Gutenberg provides a direct link to the EPUB file and grants access to the title, author, and cover image.",
+  },
+  {
+    name: "Open Library",
+    description:
+      "Open Library offers a website link where users can read books online, though login is required. It also provides links to purchase the original copy, but not all results include a direct download link. Users can still access the title, author, and cover image.",
+  },
+  {
+    name: "Internet Archive",
+    description:
+      "Internet Archive provides a direct link to EPUB or PDF files, though some ebooks may not have a direct download link. In such cases, it redirects users to a details page where they can manually download the file. It also grants access to the title, author, and cover image.",
   },
 ];
 
@@ -191,6 +214,7 @@ export default function AppSidebar() {
                     <SheetHeader>
                       <SheetTitle>{item.title}</SheetTitle>
                       <SheetDescription>
+                        <p>{item.content}</p>
                         {item.title === "Downloads" && (
                           <>
                             {isLoading.downloads ? (
@@ -252,6 +276,17 @@ export default function AppSidebar() {
                             )}
                           </>
                         )}
+
+                        {item.title === "Sources Description" &&
+                          sources.map((source) => (
+                            <div key={source.name} className="mt-4 space-y-2">
+                              <h1 className="text-xl text-foreground">
+                                {source.name}
+                              </h1>
+                              <p>{source.description}</p>
+                            </div>
+                          ))}
+
                         {/* TODO: FETCH ACC DETAILS LIKE IN HEADER */}
                         {item.title === "Account Details" && (
                           <ul className="mt-4 space-y-2">
