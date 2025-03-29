@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Banner from "@/components/ui/cbanner";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,8 @@ import { useState } from "react";
 
 export default function SignIn() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/chatbot";
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,12 +31,14 @@ export default function SignIn() {
         email,
         password,
         redirect: false,
+        callbackUrl,
       });
 
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        router.push("/chatbot");
+        router.push("/chatbot"); // Redirect to the chatbot page
+        router.refresh(); // Refresh the page to get the updated session
       }
     } catch {
       setError("An error occurred during sign in");
@@ -42,15 +46,6 @@ export default function SignIn() {
       setIsLoading(false);
     }
   };
-
-  //google oauth
-  // const handleGoogleSignIn = async () => {
-  //   try {
-  //     await signIn("google", { callbackUrl: "/chatbot" });
-  //   } catch {
-  //     setError("An error occurred during Google sign in");
-  //   }
-  // };
 
   return (
     <section className="flex flex-row min-h-svh items-center justify-center gap-16">
