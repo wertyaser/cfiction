@@ -3,6 +3,7 @@ import "next-auth";
 declare module "next-auth" {
   interface Session {
     user: {
+      isAdmin: object;
       id: string;
       name?: string | null;
       email?: string | null;
@@ -53,6 +54,7 @@ export interface DbUser {
   email: string;
   emailVerified: string | null;
   image: string | null;
+  isAdmin: boolean;
 }
 
 export interface DbAdmin {
