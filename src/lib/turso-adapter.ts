@@ -1,15 +1,9 @@
 import { ResultSet, Value } from "@libsql/client";
 import type { Adapter, AdapterUser } from "next-auth/adapters";
 import { db } from "@/db";
+import { DbUser } from "@/types/next-auth";
 
 // Define the database user type
-interface DbUser {
-  id: string;
-  name: string | null;
-  email: string;
-  emailVerified: string | null;
-  image: string | null;
-}
 
 export function TursoAdapter(): Adapter {
   return {
