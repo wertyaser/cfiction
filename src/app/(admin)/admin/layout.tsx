@@ -1,25 +1,21 @@
-"use client";
-
 import type React from "react";
-// import { useRouter } from "next/navigation";
+import type { Metadata } from "next";
+// import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/admin-sidebar";
-import { useSession } from "next-auth/react";
-// import { useEffect } from "react";
+// import { getServerSession } from "next-auth/next";
+// import { authOptions } from "@/lib/auth";
 
-export default function AdminLayout({
+export const metadata: Metadata = {
+  title: "Admin Dashboard | Book Explorer",
+  description: "Admin dashboard for Book Explorer",
+};
+
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   // Check if user is authenticated and has admin role
-
-  const { data: session } = useSession();
-
-  if (session?.user?.isAdmin) {
-    console.log("User is an admin");
-  } else {
-    console.log("User is a regular user");
-  }
 
   return (
     <div className="flex min-h-screen">
