@@ -10,6 +10,9 @@ declare module "next-auth" {
       image?: string | null;
     };
   }
+  interface User {
+    isAdmin?: boolean;
+  }
 }
 
 export interface Book {
@@ -50,11 +53,11 @@ export interface SearchHistoryItem {
 export interface DbUser {
   id: string;
   name: string | null;
-  password: string;
   email: string;
   emailVerified: string | null;
   image: string | null;
-  isAdmin: boolean;
+  password: string;
+  isAdmin: number; // 0 or 1
 }
 
 export interface DbAdmin {
