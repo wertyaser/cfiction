@@ -45,3 +45,20 @@ export interface SearchHistoryItem {
   query: string;
   created_at: string;
 }
+
+export interface DbUser {
+  id: string;
+  name: string | null;
+  password: string;
+  email: string;
+  emailVerified: string | null;
+  image: string | null;
+}
+
+export interface DbAdmin {
+  id: string;
+  email: string;
+  password: string;
+  created_at?: number;
+  isAdmin: boolean;
+}
