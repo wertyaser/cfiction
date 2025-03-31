@@ -6,13 +6,7 @@ import { TursoAdapter } from "@/lib/turso-adapter";
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
 // import { randomBytes, randomUUID } from "crypto";
-
-interface DbUser {
-  id: string;
-  email: string;
-  password: string;
-  name: string | null;
-}
+import type { DbUser } from "@/types/next-auth";
 
 export const authOptions: AuthOptions = {
   adapter: TursoAdapter(),
@@ -31,7 +25,6 @@ export const authOptions: AuthOptions = {
 
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-
         const result = await db.execute({
           sql: "SELECT * FROM users WHERE email = ?",
           args: [credentials.email],
@@ -48,6 +41,7 @@ export const authOptions: AuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name || undefined,
+          isAdmin: false,
         };
       },
     }),
@@ -57,6 +51,7 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.isAdmin = user.isAdmin ?? false;
       }
       return token;
     },
@@ -64,6 +59,7 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.isAdmin = token.isAdmin ?? false;
       }
       return session;
     },
