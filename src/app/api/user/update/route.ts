@@ -22,14 +22,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // At least one field should be provided for update
-    if (!userData.email && !userData.password && !userData.name) {
-      return NextResponse.json(
-        { error: "At least one field must be provided for update" },
-        { status: 400 }
-      );
-    }
-
     const updateResult = await updateUser(userData);
 
     if (updateResult.success) {
