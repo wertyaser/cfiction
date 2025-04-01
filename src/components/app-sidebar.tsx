@@ -283,7 +283,12 @@ export default function AppSidebar() {
                               <Avatar>
                                 <AvatarImage />
                                 <AvatarFallback>
-                                  {userName?.slice(0, 2).toUpperCase()}
+                                  {userName
+                                    ?.split(" ")
+                                    .slice(0, 2)
+                                    .map((word) => word[0])
+                                    .join("")
+                                    .toUpperCase()}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex flex-col gap-4 w-full">
