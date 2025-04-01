@@ -7,10 +7,7 @@ export async function POST(req: Request) {
     const book: Book = await req.json();
 
     if (!book.bookId || !book.title || !book.bookUrl || !book.downloadUrl) {
-      return NextResponse.json(
-        { error: "Missing required book information" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required book information" }, { status: 400 });
     }
 
     const result = await saveBook(book);
@@ -18,16 +15,10 @@ export async function POST(req: Request) {
     if (result.success) {
       return NextResponse.json({ success: true });
     } else {
-      return NextResponse.json(
-        { error: "Failed to save book" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to save book" }, { status: 500 });
     }
   } catch (error) {
     console.error("Error in save book API:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
