@@ -77,7 +77,6 @@ export default function AppSidebar() {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
   const userName = session?.user?.name;
-  const userImage = session?.user?.image;
   const [openSheet, setOpenSheet] = useState<string | null>(null);
 
   // State for downloaded books and search history
@@ -195,8 +194,7 @@ export default function AppSidebar() {
                     } else {
                       handleSheetClose();
                     }
-                  }}
-                >
+                  }}>
                   <SheetTrigger asChild>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
@@ -207,10 +205,7 @@ export default function AppSidebar() {
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   </SheetTrigger>
-                  <SheetContent
-                    side="right"
-                    className="w-full sm:max-w-md overflow-y-auto"
-                  >
+                  <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
                     <SheetHeader>
                       <SheetTitle>{item.title}</SheetTitle>
                       <SheetDescription>
@@ -229,8 +224,7 @@ export default function AppSidebar() {
                                     href={book.downloadurl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center space-x-2 p-2 border rounded-lg hover:bg-accent/50 transition"
-                                  >
+                                    className="flex items-center space-x-2 p-2 border rounded-lg hover:bg-accent/50 transition">
                                     <Files className="w-5 h-5 text-primary" />
                                     <span>{book.title}</span>
                                   </a>
@@ -253,10 +247,7 @@ export default function AppSidebar() {
                             ) : searchHistory.length > 0 ? (
                               <ul className="mt-4 space-y-2">
                                 {searchHistory.map((item, index) => (
-                                  <li
-                                    key={index}
-                                    className="p-2 border rounded-lg"
-                                  >
+                                  <li key={index} className="p-2 border rounded-lg">
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center gap-2">
                                         <Search className="w-4 h-4 text-muted-foreground" />
@@ -280,9 +271,7 @@ export default function AppSidebar() {
                         {item.title === "Sources Description" &&
                           sources.map((source) => (
                             <div key={source.name} className="mt-4 space-y-2">
-                              <h1 className="text-xl text-foreground">
-                                {source.name}
-                              </h1>
+                              <h1 className="text-xl text-foreground">{source.name}</h1>
                               <p>{source.description}</p>
                             </div>
                           ))}
@@ -292,14 +281,9 @@ export default function AppSidebar() {
                           <ul className="mt-4 space-y-2">
                             <div className="flex flex-col items-center justify-center gap-2">
                               <Avatar>
-                                <AvatarImage src={userImage || undefined} />
+                                <AvatarImage />
                                 <AvatarFallback>
-                                  {userName
-                                    ?.split(" ")
-                                    .map((word) => word[0])
-                                    .slice(0, 2)
-                                    .join("")
-                                    .toUpperCase()}
+                                  {userName?.slice(0, 2).toUpperCase()}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex flex-col gap-4 w-full">
@@ -313,17 +297,11 @@ export default function AppSidebar() {
                                 </div>
                                 <div>
                                   <Label>Password</Label>
-                                  <Input
-                                    type="password"
-                                    placeholder="*********"
-                                  />
+                                  <Input type="password" placeholder="*********" />
                                 </div>
                                 <div>
                                   <Label>Confirm Password</Label>
-                                  <Input
-                                    type="password"
-                                    placeholder="*********"
-                                  />
+                                  <Input type="password" placeholder="*********" />
                                 </div>
                                 <Button type="submit">Save Changes</Button>
                               </div>
@@ -340,10 +318,7 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <div className="p-4 mb-12">
-        <Button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-2"
-        >
+        <Button onClick={handleLogout} className="w-full flex items-center gap-2">
           <LogOut />
           <span>Logout</span>
         </Button>
