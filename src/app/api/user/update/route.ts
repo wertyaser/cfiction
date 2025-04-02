@@ -1,39 +1,85 @@
 import { NextResponse } from "next/server";
-import { updateUser } from "@/app/api/user/update-user";
-import { z } from "zod";
-
-// Create a schema for user update validation
-const userUpdateSchema = z.object({
-  email: z.string().email().optional(),
-  password: z.string().min(8).optional(),
-  name: z.string().min(1).optional(),
-});
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/db";
+import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const userData = await req.json();
+    // Get the current session to verify the user
+    const session = await getServerSession(authOptions);
 
-    // Validate the input data
-    const result = userUpdateSchema.safeParse(userData);
-    if (!result.success) {
-      return NextResponse.json(
-        { error: "Invalid user data", details: result.error.format() },
-        { status: 400 }
-      );
+    if (!session || !session.user) {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
 
-    const updateResult = await updateUser(userData);
+    const userId = session.user.id;
+    const { name, email, password } = await req.json();
 
-    if (updateResult.success) {
-      return NextResponse.json({ success: true });
-    } else {
-      return NextResponse.json(
-        { error: updateResult.message || "Failed to update user" },
-        { status: 500 }
-      );
+    // Start building the SQL query and arguments
+    let sql = "UPDATE users SET";
+    const args: (string | number)[] = [];
+    const updates: string[] = [];
+
+    // Add name update if provided
+    if (name) {
+      updates.push(" name = ?");
+      args.push(name);
     }
+
+    // Add email update if provided
+    if (email) {
+      // Check if email is already in use by another user
+      const emailCheck = await db.execute({
+        sql: "SELECT id FROM users WHERE email = ? AND id != ?",
+        args: [email, userId],
+      });
+
+      if (emailCheck.rows.length > 0) {
+        return NextResponse.json(
+          { success: false, message: "Email already in use" },
+          { status: 400 }
+        );
+      }
+
+      updates.push(" email = ?");
+      args.push(email);
+    }
+
+    // Add password update if provided
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updates.push(" password = ?");
+      args.push(hashedPassword);
+    }
+
+    // If no updates, return early
+    if (updates.length === 0) {
+      return NextResponse.json({
+        success: false,
+        message: "No updates provided",
+      });
+    }
+
+    // Complete the SQL query
+    sql += updates.join(",") + " WHERE id = ?";
+    args.push(userId);
+
+    // Execute the update
+    await db.execute({
+      sql,
+      args,
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Profile updated successfully",
+    });
   } catch (error) {
-    console.error("Error in update user API:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error updating user:", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to update profile" },
+      { status: 500 }
+    );
   }
 }
