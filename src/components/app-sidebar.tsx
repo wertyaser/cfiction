@@ -1,6 +1,7 @@
 "use client";
-// import { useState } from "react";
-import { Files, Settings, LogOut, Search, LibraryBig } from "lucide-react";
+// import { useActionState } from "react";
+// import { updateUser } from "@/actions/validation";
+import { Files, LogOut, Search, LibraryBig } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -24,13 +25,14 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+// import { Input } from "./ui/input";
+// import { Label } from "./ui/label";
 import { DownloadedBook, SearchHistoryItem } from "@/types/next-auth";
 import { useState } from "react";
 // import { url } from "inspector";
-import { useSession } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+// import { useSession } from "next-auth/react";
+// import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { EditUser } from "./edit-user";
 
 const items = [
   {
@@ -48,11 +50,11 @@ const items = [
     icon: LibraryBig,
     content: "Here you can find the details about the sources of your books.",
   },
-  {
-    title: "Account Details",
-    icon: Settings,
-    content: "Manage your account settings here.",
-  },
+  // {
+  //   title: "Account Details",
+  //   icon: Settings,
+  //   content: "Manage your account settings here.",
+  // },
 ];
 
 const sources = [
@@ -74,9 +76,9 @@ const sources = [
 ];
 
 export default function AppSidebar() {
-  const { data: session } = useSession();
-  const userEmail = session?.user?.email;
-  const userName = session?.user?.name;
+  // const { data: session } = useSession();
+  // const userEmail = session?.user?.email;
+  // const userName = session?.user?.name;
   const [openSheet, setOpenSheet] = useState<string | null>(null);
 
   // State for downloaded books and search history
@@ -143,23 +145,7 @@ export default function AppSidebar() {
   };
 
   //FOR ACCOUNT DETAILS
-  // const handleSaveChanges = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   // Validate passwords match
-  //   if (password && password !== confirmPassword) {
-  //     alert("Passwords do not match");
-  //     return;
-  //   }
-
-  //   // Update account info
-  //   setAccountInfo({
-  //     ...accountInfo,
-  //     password: password || accountInfo.password,
-  //   });
-
-  //   alert("Changes saved successfully!");
-  //   handleSheetClose();
-  // };
+  // const handleSaveChanges = (e: React.FormEvent) => {};
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -277,18 +263,13 @@ export default function AppSidebar() {
                           ))}
 
                         {/* TODO: FETCH ACC DETAILS LIKE IN HEADER */}
-                        {item.title === "Account Details" && (
+                        {/* {item.title === "Account Details" && (
                           <ul className="mt-4 space-y-2">
                             <div className="flex flex-col items-center justify-center gap-2">
                               <Avatar>
                                 <AvatarImage />
                                 <AvatarFallback>
-                                  {userName
-                                    ?.split(" ")
-                                    .slice(0, 2)
-                                    .map((word) => word[0])
-                                    .join("")
-                                    .toUpperCase()}
+                                  {userName?.slice(0, 2).toUpperCase()}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex flex-col gap-4 w-full">
@@ -312,12 +293,14 @@ export default function AppSidebar() {
                               </div>
                             </div>
                           </ul>
-                        )}
+                          
+                        )} */}
                       </SheetDescription>
                     </SheetHeader>
                   </SheetContent>
                 </Sheet>
               ))}
+              <EditUser currentEmail={""} />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
