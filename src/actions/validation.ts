@@ -3,6 +3,7 @@
 import { RegisterFormSchema } from "@/lib/rules";
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
+// import { z } from "zod";
 // import { randomUUID } from "crypto";
 
 export interface RegisterState {
@@ -85,6 +86,59 @@ export async function register(
     return { errors: { form: ["An unexpected error occurred."] } };
   }
 }
+
+// const userUpdateSchema = z.object({
+//   firstName: z.string().min(2).max(128).optional(),
+//   email: z.string().email().min(8).max(128).optional(),
+// });
+
+// export async function updateUser(userId: string, data: object) {
+//   // Type assertion for Turso client
+
+//   try {
+//     // Validate the input data using zod
+//     const validationResult = userUpdateSchema.safeParse(data);
+//     if (!validationResult.success) {
+//       return {
+//         success: false,
+//         message: validationResult.error.errors[0].message,
+//       };
+//     }
+
+//     // Check if the user exists
+//     const existingUser = await db.execute({
+//       sql: "SELECT * FROM users WHERE id = ?",
+//       args: [userId],
+//     });
+
+//     if (existingUser.rows.length === 0) {
+//       return { success: false, message: "User not found" };
+//     }
+
+//     // Prepare update query
+//     const updates = Object.entries(data)
+//       .filter(([_, value]) => value !== undefined)
+//       .map(([key]) => `${key} = ?`)
+//       .join(", ");
+
+//     if (!updates) {
+//       return { success: false, message: "No fields to update" };
+//     }
+
+//     const values = Object.values(data).filter((value) => value !== undefined);
+
+//     // Update the user in the database
+//     await db.execute({
+//       sql: `UPDATE users SET ${updates} WHERE id = ?`,
+//       args: [...values, userId],
+//     });
+
+//     return { success: true, message: "User updated successfully" };
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     return { success: false, message: "Server error, please try again later" };
+//   }
+// }
 
 export async function forgotPassword(
   prevState: EmailState | undefined,
