@@ -1,6 +1,6 @@
 "use client";
-// import { useActionState } from "react";
-// import { updateUser } from "@/actions/validation";
+
+import { useState } from "react";
 import { Files, LogOut, Search, LibraryBig } from "lucide-react";
 import {
   Sidebar,
@@ -12,7 +12,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import SideHeader from "./sidebar-header";
 import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
 import ThemeSwitch from "./ui/theme-switch";
@@ -25,14 +24,8 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-// import { Input } from "./ui/input";
-// import { Label } from "./ui/label";
 import { DownloadedBook, SearchHistoryItem } from "@/types/next-auth";
-import { useState } from "react";
-// import { url } from "inspector";
-// import { useSession } from "next-auth/react";
-// import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { EditUser } from "./edit-user";
+import { useToast } from "@/hooks/use-toast";
 
 const items = [
   {
@@ -50,11 +43,6 @@ const items = [
     icon: LibraryBig,
     content: "Here you can find the details about the sources of your books.",
   },
-  // {
-  //   title: "Account Details",
-  //   icon: Settings,
-  //   content: "Manage your account settings here.",
-  // },
 ];
 
 const sources = [
@@ -76,9 +64,7 @@ const sources = [
 ];
 
 export default function AppSidebar() {
-  // const { data: session } = useSession();
-  // const userEmail = session?.user?.email;
-  // const userName = session?.user?.name;
+  const { toast } = useToast();
   const [openSheet, setOpenSheet] = useState<string | null>(null);
 
   // State for downloaded books and search history
@@ -118,9 +104,19 @@ export default function AppSidebar() {
         setDownloadedBooks(data);
       } else {
         console.error("Failed to fetch downloaded books");
+        toast({
+          title: "Error",
+          description: "Failed to fetch downloaded books",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error fetching downloaded books:", error);
+      toast({
+        title: "Error",
+        description: "Error fetching downloaded books",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading((prev) => ({ ...prev, downloads: false }));
     }
@@ -136,25 +132,26 @@ export default function AppSidebar() {
         setSearchHistory(data);
       } else {
         console.error("Failed to fetch search history");
+        toast({
+          title: "Error",
+          description: "Failed to fetch search history",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error fetching search history:", error);
+      toast({
+        title: "Error",
+        description: "Error fetching search history",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading((prev) => ({ ...prev, history: false }));
     }
   };
 
-  //FOR ACCOUNT DETAILS
-  // const handleSaveChanges = (e: React.FormEvent) => {};
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
-
   return (
     <Sidebar>
-      <SideHeader />
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Theme</SidebarGroupLabel>
@@ -240,7 +237,7 @@ export default function AppSidebar() {
                                         <span>{item.query}</span>
                                       </div>
                                       <span className="text-xs text-muted-foreground">
-                                        {formatDate(item.created_at)}
+                                        {new Date(item.created_at).toLocaleString()}
                                       </span>
                                     </div>
                                   </li>
@@ -261,53 +258,18 @@ export default function AppSidebar() {
                               <p>{source.description}</p>
                             </div>
                           ))}
-
-                        {/* TODO: FETCH ACC DETAILS LIKE IN HEADER */}
-                        {/* {item.title === "Account Details" && (
-                          <ul className="mt-4 space-y-2">
-                            <div className="flex flex-col items-center justify-center gap-2">
-                              <Avatar>
-                                <AvatarImage />
-                                <AvatarFallback>
-                                  {userName?.slice(0, 2).toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex flex-col gap-4 w-full">
-                                <div>
-                                  <Label>Name</Label>
-                                  <Input type="text" value={userName || ""} />
-                                </div>
-                                <div>
-                                  <Label>Email</Label>
-                                  <Input type="email" value={userEmail || ""} />
-                                </div>
-                                <div>
-                                  <Label>Password</Label>
-                                  <Input type="password" placeholder="*********" />
-                                </div>
-                                <div>
-                                  <Label>Confirm Password</Label>
-                                  <Input type="password" placeholder="*********" />
-                                </div>
-                                <Button type="submit">Save Changes</Button>
-                              </div>
-                            </div>
-                          </ul>
-                          
-                        )} */}
                       </SheetDescription>
                     </SheetHeader>
                   </SheetContent>
                 </Sheet>
               ))}
-              <EditUser currentEmail={""} />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <div className="p-4 mb-12">
         <Button onClick={handleLogout} className="w-full flex items-center gap-2">
-          <LogOut />
+          <LogOut className="h-4 w-4" />
           <span>Logout</span>
         </Button>
       </div>
