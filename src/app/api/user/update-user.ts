@@ -3,9 +3,11 @@ interface UpdateUserResponse {
   message?: string;
 }
 
-export async function updateUser(data: Record<string, string>): Promise<UpdateUserResponse> {
+export async function updateUser(
+  data: Record<string, string>
+): Promise<UpdateUserResponse> {
   try {
-    const response = await fetch("/api/user/update", {
+    const response = await fetch("/api/edit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
