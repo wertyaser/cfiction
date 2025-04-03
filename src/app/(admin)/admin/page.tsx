@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import React from "react";
 import { redirect } from "next/navigation";
-import { getDashboardStats, getRecentActivities } from "@/lib/admin";
+import { getDashboardStats, getPopularBooks, getRecentActivities } from "@/lib/admin";
 
 interface DashboardStats {
   totalUsers: number;
@@ -14,15 +14,6 @@ interface DashboardStats {
   totalDownloads: number;
   // activeUsers: string | null | number;
 }
-
-// interface Activity {
-//   id: string;
-//   userName: string;
-//   type: "search" | "download";
-//   bookTitle: string | null;
-//   query: string | null;
-//   timestamp: string;
-// }
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
@@ -188,7 +179,6 @@ async function RecentActivity() {
 
 // WIP : GINAGAWA PA LANG
 async function PopularBooks() {
-  // This would fetch popular books data from your API
   const books = await getPopularBooks();
 
   return (
@@ -280,13 +270,13 @@ function formatDate(dateString: string) {
   return new Intl.DateTimeFormat("en-PH", options).format(date);
 }
 
-async function getPopularBooks() {
-  // Placeholder data
-  return [
-    { id: "1", title: "1984", downloads: 245 },
-    { id: "2", title: "The Great Gatsby", downloads: 189 },
-    { id: "3", title: "To Kill a Mockingbird", downloads: 156 },
-    { id: "4", title: "Pride and Prejudice", downloads: 132 },
-    { id: "5", title: "The Catcher in the Rye", downloads: 98 },
-  ];
-}
+// async function getPopularBooks() {
+//   // Placeholder data
+//   return [
+//     { id: "1", title: "1984", downloads: 245 },
+//     { id: "2", title: "The Great Gatsby", downloads: 189 },
+//     { id: "3", title: "To Kill a Mockingbird", downloads: 156 },
+//     { id: "4", title: "Pride and Prejudice", downloads: 132 },
+//     { id: "5", title: "The Catcher in the Rye", downloads: 98 },
+//   ];
+// }
