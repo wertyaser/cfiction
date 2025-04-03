@@ -6,11 +6,15 @@ export default function About() {
         <span className="font-thin">bout</span>
       </h2>
       <p className="mt-4 text-xl font-light leading-relaxed">
-        <span className="font-bold">Ctrl+F[iction]</span> is an intelligent library chatbot system
-        designed to streamline the ebook search and retrieval process. Utilizing AI-powered natural
-        language processing, users can simply input commands to find and download ebooks instantly.
-        This system enhances user experience through efficient, real-time results and intelligent
-        recommendations.
+        At Ctrl+Fiction, we&apos;re redefining how you connect with literature. Our mission? To make
+        finding and enjoying ebooks effortless, intelligent, and fun. With our powerful multi-source
+        search, you can explore treasures from Project Gutenberg, Open Library, and Internet Archive
+        in seconds—all in one sleek platform. Paired with Ctrl, your personal AI Librarian,
+        you&apos;ll get tailored answers and guidance whenever you need it. Whether you&apos;re
+        hunting for a classic novel, saving your next read, or simply curious, Ctrl+Fiction is
+        designed to spark your love for books. Built with cutting-edge tech and a passion for
+        reading, we&apos;re here to empower every book lover, researcher, and dreamer. Welcome to a
+        smarter way to read—welcome to Ctrl+Fiction!
       </p>
     </section>
   );
