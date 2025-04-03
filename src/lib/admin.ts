@@ -1,5 +1,7 @@
 "use server";
 import { db } from "@/db";
+import bcrypt from "bcryptjs";
+import { revalidatePath } from "next/cache";
 // interface UserUpdateData {
 //   name: string;
 //   email: string;
@@ -83,16 +85,28 @@ export async function editUser(formData: FormData) {
 export async function resetPassword(formData: FormData) {
   const id = formData.get("id") as string;
   const newPassword = formData.get("new-password") as string;
+  const confirmPassword = formData.get("confirm-password") as string;
   // Add password hashing (e.g., with bcrypt) here
-  const hashedPassword = newPassword; // Placeholder; replace with actual hashing
+  // const hashedPassword = newPassword;
+  if (newPassword !== confirmPassword) {
+    throw new Error("Passwords do not match");
+  }
+  if (!newPassword || newPassword.length < 6) {
+    throw new Error("Password must be at least 6 characters long");
+  }
+  const hashedPassword = await bcrypt.hash(newPassword, 10); // Hash the password with bcrypt
 
+  // console.log("Resetting password for user:", { id, hashedPassword });
   try {
-    await db.execute({
+    const result = await db.execute({
       sql: "UPDATE users SET password = ? WHERE id = ?",
       args: [hashedPassword, id],
     });
+    console.log("Password reset successfully", result);
+    revalidatePath("/admin/users"); // Revalidate the path to refresh the data
   } catch (error) {
     console.error("Error resetting password:", error);
+    throw error;
   }
 }
 
