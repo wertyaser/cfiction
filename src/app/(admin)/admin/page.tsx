@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import React from "react";
 import { redirect } from "next/navigation";
-import { getDashboardStats } from "@/lib/admin";
+import { getDashboardStats, getRecentActivities } from "@/lib/admin";
 
 interface DashboardStats {
   totalUsers: number;
@@ -14,6 +14,15 @@ interface DashboardStats {
   totalDownloads: number;
   // activeUsers: string | null | number;
 }
+
+// interface Activity {
+//   id: string;
+//   userName: string;
+//   type: "search" | "download";
+//   bookTitle: string | null;
+//   query: string | null;
+//   timestamp: string;
+// }
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
@@ -141,6 +150,7 @@ function MetricCard({
   );
 }
 
+//DONE : WORKING RECENT ACTIVITY
 async function RecentActivity() {
   // This would fetch recent activity data from your API
   const activities = await getRecentActivities();
@@ -161,7 +171,9 @@ async function RecentActivity() {
               <p>
                 <span className="font-medium">{activity.userName}</span>{" "}
                 {activity.type === "search" ? "searched for" : "downloaded"}{" "}
-                <span className="font-medium">{activity.bookTitle}</span>
+                <span className="font-medium">
+                  {activity.type === "search" ? activity.query : activity.bookTitle}
+                </span>
               </p>
               <p className="text-xs text-muted-foreground">{formatDate(activity.timestamp)}</p>
             </div>
@@ -260,28 +272,6 @@ function formatDate(dateString: string) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
-}
-
-// These would be API calls to your backend
-async function getRecentActivities() {
-  // Placeholder data
-  return [
-    {
-      id: "1",
-      userName: "John Doe",
-      type: "search",
-      bookTitle: "The Great Gatsby",
-      timestamp: new Date().toISOString(),
-    },
-    {
-      id: "2",
-      userName: "Jane Smith",
-      type: "download",
-      bookTitle: "To Kill a Mockingbird",
-      timestamp: new Date(Date.now() - 3600000).toISOString(),
-    },
-    // More activities...
-  ];
 }
 
 async function getPopularBooks() {
