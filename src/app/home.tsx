@@ -1,11 +1,11 @@
 "use client";
-import About from "@/components/about";
-import ContactUs from "@/components/contact-us";
-import Preview from "@/components/preview";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-import Hero from "@/components/hero";
-import MostDownloaded from "@/components/most-downloaded";
+import About from "@/components/home/about";
+import ContactUs from "@/components/home/contact-us";
+import Preview from "@/components/home/preview";
+import Footer from "@/components/home/footer";
+import Header from "@/components/home/header";
+import Hero from "@/components/home/hero";
+import MostDownloaded from "@/components/home/most-downloaded";
 import Image from "next/image";
 // import { useEffect, useState } from "react";
 // import dynamic from "next/dynamic";

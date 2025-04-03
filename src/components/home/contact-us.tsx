@@ -1,8 +1,8 @@
-import { Card, CardContent } from "./ui/card";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 import { Facebook, Twitter, Instagram } from "lucide-react";
 import { JSX } from "react";
 
@@ -68,8 +68,7 @@ export default function ContactUs() {
           <a
             key={index}
             href={social.link}
-            className="text-2xl hover:text-blue-700 flex items-center gap-2"
-          >
+            className="text-2xl hover:text-blue-700 flex items-center gap-2">
             {social.icon}
           </a>
         ))}

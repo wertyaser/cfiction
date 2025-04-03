@@ -1,16 +1,16 @@
 "use client";
 import { useState } from "react";
-import { Card, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
 import { Download } from "lucide-react";
 import { SendHorizontal } from "lucide-react";
 // import { Input } from "./ui/input";
-import { ChatBubble } from "./ui/chat/chat-bubble";
-import { ChatMessageList } from "./ui/chat/chat-message-list";
-import { ChatBubbleMessage } from "./ui/chat/chat-bubble";
-import { ChatBubbleAvatar } from "./ui/chat/chat-bubble";
-import { ChatInput } from "./ui/chat/chat-input";
-import { Separator } from "./ui/separator";
+import { ChatBubble } from "../ui/chat/chat-bubble";
+import { ChatMessageList } from "../ui/chat/chat-message-list";
+import { ChatBubbleMessage } from "../ui/chat/chat-bubble";
+import { ChatBubbleAvatar } from "../ui/chat/chat-bubble";
+import { ChatInput } from "../ui/chat/chat-input";
+import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { Separator } from "@radix-ui/react-separator";
 
@@ -95,16 +95,14 @@ export default function Preview() {
                     <ChatBubbleAvatar fallback="AI" />
                     <ChatBubbleMessage className="flex items-center space-x-2">
                       <span className="">
-                        AI (Artificial Intelligence) is the simulation of human
-                        intelligence in machines, allowing them to perform tasks
-                        that typically require human thinking, such as
-                        problem-solving, learning, reasoning, and
-                        decision-making. AI systems can be rule-based
-                        (traditional programming) or use machine learning, where
-                        they learn from data and improve over time. There are
-                        different types of AI: Narrow AI (Weak AI) Designed for
-                        specific tasks, like chatbots, trading bots, or
-                        recommendation systems (e.g., Netflix suggestions).
+                        AI (Artificial Intelligence) is the simulation of human intelligence in
+                        machines, allowing them to perform tasks that typically require human
+                        thinking, such as problem-solving, learning, reasoning, and decision-making.
+                        AI systems can be rule-based (traditional programming) or use machine
+                        learning, where they learn from data and improve over time. There are
+                        different types of AI: Narrow AI (Weak AI) Designed for specific tasks, like
+                        chatbots, trading bots, or recommendation systems (e.g., Netflix
+                        suggestions).
                       </span>
                       <Download className="h-4 w-4 cursor-pointer" />
                     </ChatBubbleMessage>

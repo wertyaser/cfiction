@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "./ui/navbar";
+import Navbar from "../ui/navbar";
 
 export default function Header() {
   return (
