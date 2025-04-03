@@ -13,6 +13,7 @@ import { ChatInput } from "../ui/chat/chat-input";
 import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { Separator } from "@radix-ui/react-separator";
+import PreviewEbookSearch from "./preview-ebook-search";
 
 export default function Preview() {
   const [inputValue, setInputValue] = useState("");
@@ -32,51 +33,8 @@ export default function Preview() {
 
           {/* E BOOK */}
           <TabsContent value="ebook">
-            <Card className="w-full">
-              <CardContent className="p-10">
-                <ChatMessageList>
-                  {/* user chat */}
-                  <ChatBubble variant="sent">
-                    <ChatBubbleAvatar fallback="US" />
-                    <ChatBubbleMessage>
-                      <span className="font-bold">/Atomic Habits</span>
-                    </ChatBubbleMessage>
-                  </ChatBubble>
-
-                  {/* bot reply */}
-                  <ChatBubble variant="received">
-                    <ChatBubbleAvatar fallback="AI" />
-                    <ChatBubbleMessage className="flex items-center space-x-2">
-                      <span className="font-bold">AtomicHabits.pdf</span>
-                      <Download className="h-4 w-4 cursor-pointer" />
-                    </ChatBubbleMessage>
-                  </ChatBubble>
-
-                  <ChatBubble variant="received">
-                    <ChatBubbleAvatar fallback="AI" />
-                    <ChatBubbleMessage isLoading />
-                  </ChatBubble>
-
-                  <Separator className="my-2" />
-
-                  <div className="flex justify-center items-center">
-                    <ChatInput
-                      placeholder="Type your message here!"
-                      className="flex-grow rounded-r-none min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                    />
-
-                    <Button className="ml-auto gap-1.5 h-full">
-                      Send
-                      <SendHorizontal className="h-5 w-5" />
-                    </Button>
-                  </div>
-                </ChatMessageList>
-              </CardContent>
-            </Card>
+            <PreviewEbookSearch />
           </TabsContent>
-
           {/* CHAT BOT */}
           <TabsContent value="chatbot">
             <Card>
