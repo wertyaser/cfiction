@@ -19,11 +19,7 @@ export default function UsersPage() {
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search users..."
-                className="pl-8 w-full"
-              />
+              <Input type="search" placeholder="Search users..." className="pl-8 w-full" />
             </div>
             <Button variant="outline" className="flex items-center gap-2">
               <RefreshCw className="h-4 w-4" />
