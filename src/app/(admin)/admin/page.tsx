@@ -1,19 +1,31 @@
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Users, BookOpen, BookMarked, Activity } from "lucide-react";
-// import AdminSidebar from "@/components/admin/admin-sidebar";
+import { Users, BookOpen, BookMarked } from "lucide-react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import React from "react";
-// import { getDashboardStats } from "@/lib/admin";
+import { redirect } from "next/navigation";
+import { getDashboardStats } from "@/lib/admin";
+
+interface DashboardStats {
+  totalUsers: number;
+  totalSearches: number;
+  totalDownloads: number;
+  // activeUsers: string | null | number;
+}
 
 export default async function AdminDashboard() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/sign-in");
+  }
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Overview of your Book Explorer platform.
-        </p>
+        <p className="text-muted-foreground">Overview of your Book Explorer platform.</p>
       </div>
 
       <Suspense fallback={<MetricsSkeleton />}>
@@ -46,19 +58,32 @@ export default async function AdminDashboard() {
   );
 }
 
+// DONE : WORKING DASHBOARD METRICS
 async function DashboardMetrics() {
-  // const stats = await getDashboardStats();
+  const stats: DashboardStats = await getDashboardStats();
+
+  // Check if all stats are 0 (indicating an error)
+  if (
+    stats.totalUsers === 0 &&
+    stats.totalSearches === 0 &&
+    stats.totalDownloads === 0
+    // stats.activeUsers === 0
+  ) {
+    return (
+      <div className="text-red-500">Failed to load dashboard stats. Please try again later.</div>
+    );
+  }
 
   // Replace `getDashboardStats` with dummy data
-  const stats = {
-    totalUsers: 1200,
-    totalSearches: 4500,
-    totalDownloads: 3200,
-    activeUsers: 150,
-  };
+  // const stats = {
+  //   totalUsers: 1200,
+  //   totalSearches: 4500,
+  //   totalDownloads: 3200,
+  //   activeUsers: 150,
+  // };
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <MetricCard
         title="Total Users"
         value={stats.totalUsers}
@@ -77,12 +102,12 @@ async function DashboardMetrics() {
         icon={BookMarked}
         description="All time"
       />
-      <MetricCard
+      {/* <MetricCard
         title="Active Users"
-        value={stats.activeUsers}
+        value="hindi pa nagagawa"
         icon={Activity}
         description="This week"
-      />
+      /> */}
     </div>
   );
 }
@@ -138,16 +163,12 @@ async function RecentActivity() {
                 {activity.type === "search" ? "searched for" : "downloaded"}{" "}
                 <span className="font-medium">{activity.bookTitle}</span>
               </p>
-              <p className="text-xs text-muted-foreground">
-                {formatDate(activity.timestamp)}
-              </p>
+              <p className="text-xs text-muted-foreground">{formatDate(activity.timestamp)}</p>
             </div>
           </div>
         ))
       ) : (
-        <p className="text-muted-foreground text-center py-4">
-          No recent activity
-        </p>
+        <p className="text-muted-foreground text-center py-4">No recent activity</p>
       )}
     </div>
   );
@@ -167,16 +188,12 @@ async function PopularBooks() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium truncate">{book.title}</p>
-              <p className="text-xs text-muted-foreground">
-                {book.downloads} downloads
-              </p>
+              <p className="text-xs text-muted-foreground">{book.downloads} downloads</p>
             </div>
           </div>
         ))
       ) : (
-        <p className="text-muted-foreground text-center py-4">
-          No popular books data
-        </p>
+        <p className="text-muted-foreground text-center py-4">No popular books data</p>
       )}
     </div>
   );
