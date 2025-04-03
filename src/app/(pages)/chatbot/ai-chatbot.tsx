@@ -4,27 +4,21 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-import {
-  ChatBubble,
-  ChatBubbleAvatar,
-  ChatBubbleMessage,
-} from "@/components/ui/chat/chat-bubble";
+import { ChatBubble, ChatBubbleAvatar, ChatBubbleMessage } from "@/components/ui/chat/chat-bubble";
 import { Send } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 // import { ChatInput } from "@/components/ui/chat/chat-input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
 // import ReactMarkdown from "react-markdown";
 
 export default function AiChatbot() {
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
-    [
-      {
-        role: "assis",
-        content: "Hi! I'm Ctrl, your AI Librarian. How can I help you today?",
-      },
-    ]
-  );
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>([
+    {
+      role: "assis",
+      content: "Hi! I'm Ctrl, your AI Librarian. How can I help you today?",
+    },
+  ]);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -80,8 +74,7 @@ export default function AiChatbot() {
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
   // Save messages to localStorage whenever they change
@@ -124,13 +117,8 @@ export default function AiChatbot() {
           <div className="flex-1 overflow-y-auto mb-2" ref={chatContainerRef}>
             <ChatMessageList>
               {messages.map((msg, index) => (
-                <ChatBubble
-                  key={index}
-                  variant={msg.role === "user" ? "sent" : "received"}
-                >
-                  <ChatBubbleAvatar
-                    fallback={msg.role === "user" ? "US" : "AI"}
-                  />
+                <ChatBubble key={index} variant={msg.role === "user" ? "sent" : "received"}>
+                  <ChatBubbleAvatar fallback={msg.role === "user" ? "US" : "AI"} />
                   <ChatBubbleMessage>
                     <span className="text-sm">{msg.content}</span>
                   </ChatBubbleMessage>
@@ -158,11 +146,7 @@ export default function AiChatbot() {
               onKeyDown={handleKeyDown}
             />
 
-            <Button
-              onClick={handleSubmit}
-              className="ml-auto gap-1.5 h-full"
-              disabled={loading}
-            >
+            <Button onClick={handleSubmit} className="ml-auto gap-1.5 h-full" disabled={loading}>
               <Send size={50} className="sm:size-5 md:size-6" />
             </Button>
           </div>
