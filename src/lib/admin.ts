@@ -1,5 +1,17 @@
 import { db } from "@/db";
+interface UserUpdateData {
+  name: string;
+  email: string;
+}
 
+interface Activity {
+  id: string;
+  userName: string;
+  type: "search" | "download";
+  bookTitle: string | null;
+  query: string | null;
+  timestamp: string;
+}
 // Initialize Turso client
 
 // export async function getDashboardStats() {
@@ -55,6 +67,56 @@ import { db } from "@/db";
 //     };
 //   }
 // }
+export async function getRecentActivities(): Promise<Activity[]> {
+  try {
+    const currentDate = new Date();
+
+    const result = await db.execute({
+      sql: `
+        SELECT 
+          sh.id,
+          u.name AS userName,
+          'search' AS type,
+          NULL AS bookTitle,
+          sh.query,
+          sh.created_at AS timestamp
+        FROM search_history sh
+        JOIN users u ON sh.userId = u.id
+        WHERE sh.created_at >= datetime(?, '-7 days')
+
+        UNION ALL
+
+        SELECT 
+          b.id,
+          u.name AS userName,
+          'download' AS type,
+          b.title AS bookTitle,
+          NULL AS query,
+          b.created_at AS timestamp
+        FROM books b
+        JOIN users u ON b.userId = u.id  -- Changed from b.user to b.userId
+        WHERE b.created_at >= datetime(?, '-7 days')
+        ORDER BY timestamp DESC
+        LIMIT 10
+    `,
+      args: [currentDate.toISOString(), currentDate.toISOString()],
+    });
+
+    const activities: Activity[] = result.rows.map((row) => ({
+      id: String(row.id), // Ensure id is a string
+      userName: row.userName as string,
+      type: row.type as "search" | "download",
+      bookTitle: (row.bookTitle as string) || null, // Null if no bookTitle (for searches)
+      query: (row.query as string) || null, // Null if no query (for downloads)
+      timestamp: row.timestamp as string, // Assuming stored as ISO string
+    }));
+
+    return activities;
+  } catch (error) {
+    console.error("Error fetching recent activities:", error);
+    return [];
+  }
+}
 
 export async function getDashboardStats() {
   try {
@@ -161,11 +223,6 @@ export async function getAllUsers() {
     console.error("Error fetching users:", error);
     return [];
   }
-}
-
-interface UserUpdateData {
-  name: string;
-  email: string;
 }
 
 export async function updateUser(userId: string, userData: UserUpdateData) {
