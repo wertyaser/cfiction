@@ -3,15 +3,13 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="min-h-[50vh] flex flex-col items-center justify-center pt-20 pb-5 text-center"
-    >
+      className="min-h-[50vh] flex flex-col items-center justify-center pt-20 pb-5 text-center">
       <h1 className="text-8xl font-bold">Ctrl+F[iction]</h1>
       <p className="mt-4 max-w-3xl text-xl font-light leading-relaxed md:text-md sm:text">
-        A cutting-edge <b>AI chatbot</b> designed to effortlessly find and
-        download <b>ebooks</b>,<b> publications</b>, <b>articles</b>, and
-        <b>journals</b> with simple commands.
-        <b> Why waste time browsing</b> when you can access instant results
-        through a free ebooks API?
+        Unleash a world of <b>ebooks</b> with lightning-fast searches across top libraries and chat
+        with
+        <b>Ctrl</b>, your <b>AI Librarian</b>, for instant answers. Discover, download, and dive
+        in—reading has never been this smart or simple!
       </p>
     </section>
   );
