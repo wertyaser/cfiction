@@ -25,6 +25,7 @@ export const authOptions: AuthOptions = {
 
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
+
         const result = await db.execute({
           sql: "SELECT * FROM users WHERE email = ?",
           args: [credentials.email],
@@ -41,7 +42,7 @@ export const authOptions: AuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name || undefined,
-          isAdmin: false,
+          isAdmin: user.isAdmin === 1,
         };
       },
     }),
