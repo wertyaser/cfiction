@@ -12,15 +12,40 @@ interface Activity {
   query: string | null;
   timestamp: string;
 }
+
+interface PopularBook {
+  id: string;
+  title: string;
+  downloads: number;
+}
+
 export async function getPopularBooks() {
-  // Placeholder data
-  return [
-    { id: "1", title: "1984", downloads: 245 },
-    { id: "2", title: "The Great Gatsby", downloads: 189 },
-    { id: "3", title: "To Kill a Mockingbird", downloads: 156 },
-    { id: "4", title: "Pride and Prejudice", downloads: 132 },
-    { id: "5", title: "The Catcher in the Rye", downloads: 98 },
-  ];
+  try {
+    const result = await db.execute({
+      sql: `
+        SELECT 
+          MIN(id) AS id,  -- Use MIN(id) to get a single id per title
+          title,
+          COUNT(*) AS downloads
+        FROM books
+        GROUP BY title
+        ORDER BY downloads DESC
+        LIMIT 5  -- Top 5 most popular books
+      `,
+      args: [],
+    });
+
+    const books: PopularBook[] = result.rows.map((row) => ({
+      id: String(row.id), // Ensure id is a string
+      title: row.title as string,
+      downloads: Number(row.downloads), // Ensure downloads is a number
+    }));
+
+    return books;
+  } catch (error) {
+    console.error("Error fetching popular books:", error);
+    return [];
+  }
 }
 
 export async function getRecentActivities(): Promise<Activity[]> {
