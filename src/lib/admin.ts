@@ -1,8 +1,9 @@
+"use server";
 import { db } from "@/db";
-interface UserUpdateData {
-  name: string;
-  email: string;
-}
+// interface UserUpdateData {
+//   name: string;
+//   email: string;
+// }
 
 interface Activity {
   id: string;
@@ -18,6 +19,94 @@ interface PopularBook {
   title: string;
   author: string;
   downloads: number;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  registeredAt: string; // Renamed from created_at for consistency with your mock data
+  adminStatus: "admin" | "user"; // Derived or adjust based on your schema
+}
+
+// USER CRUD OPERATIONS
+export async function getAllUsers(): Promise<User[]> {
+  try {
+    const result = await db.execute({
+      sql: `
+        SELECT 
+          id,
+          name,
+          email,
+          created_at AS registeredAt,
+          isAdmin
+        FROM users
+        ORDER BY created_at DESC
+      `,
+      args: [],
+    });
+
+    return result.rows.map((row) => ({
+      id: String(row.id),
+      name: row.name as string,
+      email: row.email as string,
+      registeredAt: row.registeredAt as string,
+      adminStatus: row.isAdmin ? "admin" : "user",
+    }));
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return [];
+  }
+}
+
+export async function editUser(formData: FormData) {
+  const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const adminStatus = formData.get("adminStatus") as "admin" | "user";
+  const isAdmin = adminStatus === "admin" ? 1 : 0;
+
+  console.log("Editing user:", { id, name, email, isAdmin });
+
+  try {
+    await db.execute({
+      sql: "UPDATE users SET name = ?, email = ?, isAdmin = ? WHERE id = ?",
+      args: [name, email, isAdmin, id],
+    });
+    console.log("User updated successfully");
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+}
+
+export async function resetPassword(formData: FormData) {
+  const id = formData.get("id") as string;
+  const newPassword = formData.get("new-password") as string;
+  // Add password hashing (e.g., with bcrypt) here
+  const hashedPassword = newPassword; // Placeholder; replace with actual hashing
+
+  try {
+    await db.execute({
+      sql: "UPDATE users SET password = ? WHERE id = ?",
+      args: [hashedPassword, id],
+    });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+  }
+}
+
+export async function deleteUser(formData: FormData) {
+  const id = formData.get("id") as string;
+
+  try {
+    await db.execute({
+      sql: "DELETE FROM users WHERE id = ?",
+      args: [id],
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+  }
 }
 
 export async function getPopularBooks() {
@@ -195,56 +284,43 @@ export async function getTopDownloadedBooks(limit = 10) {
   }
 }
 
-export async function getAllUsers() {
-  try {
-    const result = await db.execute({
-      sql: "SELECT * FROM users ORDER BY created_at DESC",
-      args: [],
-    });
+// USER CRUD OPERATIONS (commented out for now, but you can uncomment and use them as needed)
+// export async function updateUser(userId: string, userData: UserUpdateData) {
+//   try {
+//     await db.execute({
+//       sql: "UPDATE users SET name = ?, email = ? WHERE id = ?",
+//       args: [userData.name, userData.email, userId],
+//     });
+//     return { success: true };
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     return { success: false, error };
+//   }
+// }
 
-    return result.rows;
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return [];
-  }
-}
+// export async function deleteUser(userId: string) {
+//   try {
+//     await db.execute({
+//       sql: "DELETE FROM users WHERE id = ?",
+//       args: [userId],
+//     });
+//     return { success: true };
+//   } catch (error) {
+//     console.error("Error deleting user:", error);
+//     return { success: false, error };
+//   }
+// }
 
-export async function updateUser(userId: string, userData: UserUpdateData) {
-  try {
-    await db.execute({
-      sql: "UPDATE users SET name = ?, email = ? WHERE id = ?",
-      args: [userData.name, userData.email, userId],
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating user:", error);
-    return { success: false, error };
-  }
-}
-
-export async function deleteUser(userId: string) {
-  try {
-    await db.execute({
-      sql: "DELETE FROM users WHERE id = ?",
-      args: [userId],
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Error deleting user:", error);
-    return { success: false, error };
-  }
-}
-
-export async function resetUserPassword(userId: string, newPassword: string) {
-  try {
-    // In a real app, you would hash the password before storing it
-    await db.execute({
-      sql: "UPDATE user_credentials SET password = ? WHERE userId = ?",
-      args: [newPassword, userId],
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Error resetting password:", error);
-    return { success: false, error };
-  }
-}
+// export async function resetUserPassword(userId: string, newPassword: string) {
+//   try {
+//     // In a real app, you would hash the password before storing it
+//     await db.execute({
+//       sql: "UPDATE user_credentials SET password = ? WHERE userId = ?",
+//       args: [newPassword, userId],
+//     });
+//     return { success: true };
+//   } catch (error) {
+//     console.error("Error resetting password:", error);
+//     return { success: false, error };
+//   }
+// }
