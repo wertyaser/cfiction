@@ -2,7 +2,7 @@
 "use client";
 
 import { startTransition, useState } from "react";
-import { editUser } from "@/lib/admin";
+import { editUser, resetPassword } from "@/lib/admin";
 import {
   Table,
   TableBody,
@@ -56,6 +56,18 @@ export default function UserTableContent({ users }: { users: User[] }) {
       } catch (error) {
         console.error("Failed to edit user:", error);
         alert("Failed to save changes. Check the console for details.");
+      }
+    });
+  };
+
+  const handleResetPassword = (formData: FormData) => {
+    startTransition(async () => {
+      try {
+        await resetPassword(formData);
+        setResetPasswordUser(null); // Close dialog on success
+      } catch (error) {
+        console.error("Failed to reset password:", error);
+        alert("Failed to reset password. Check the console for details.");
       }
     });
   };
@@ -175,20 +187,35 @@ export default function UserTableContent({ users }: { users: User[] }) {
           <DialogHeader>
             <DialogTitle>Reset Password</DialogTitle>
             <DialogDescription>Set a new password for {resetPasswordUser?.name}.</DialogDescription>
+            <DialogDescription className="text-center text-red-500">
+              Password must be atleast 6 characters long
+            </DialogDescription>
           </DialogHeader>
-          <form action="/admin/users/reset-password" method="POST" className="grid gap-4 py-4">
+          <form action={handleResetPassword} method="POST" className="grid gap-4 py-4">
             <input type="hidden" name="id" value={resetPasswordUser?.id} />
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="new-password" className="text-right">
                 New Password
               </Label>
-              <Input id="new-password" name="new-password" type="password" className="col-span-3" />
+              <Input
+                id="new-password"
+                name="new-password"
+                type="password"
+                className="col-span-3"
+                required
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="confirm-password" className="text-right">
                 Confirm Password
               </Label>
-              <Input id="confirm-password" type="password" className="col-span-3" />
+              <Input
+                id="confirm-password"
+                name="confirm-password"
+                type="password"
+                className="col-span-3"
+                required
+              />
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setResetPasswordUser(null)}>
