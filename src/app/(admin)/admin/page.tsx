@@ -186,6 +186,7 @@ async function RecentActivity() {
   );
 }
 
+// WIP : GINAGAWA PA LANG
 async function PopularBooks() {
   // This would fetch popular books data from your API
   const books = await getPopularBooks();
@@ -268,10 +269,15 @@ function PopularBooksSkeleton() {
 // Helper functions
 function formatDate(dateString: string) {
   const date = new Date(dateString);
-  return new Intl.DateTimeFormat("en-US", {
+
+  // Convert the date to the Philippine timezone (UTC+8)
+  const options: Intl.DateTimeFormatOptions = {
     dateStyle: "medium",
     timeStyle: "short",
-  }).format(date);
+    timeZone: "Asia/Manila", // Explicitly set the timezone to PHT
+  };
+
+  return new Intl.DateTimeFormat("en-PH", options).format(date);
 }
 
 async function getPopularBooks() {
