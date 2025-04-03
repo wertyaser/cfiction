@@ -16,6 +16,7 @@ interface Activity {
 interface PopularBook {
   id: string;
   title: string;
+  author: string;
   downloads: number;
 }
 
@@ -26,6 +27,7 @@ export async function getPopularBooks() {
         SELECT 
           MIN(id) AS id,  -- Use MIN(id) to get a single id per title
           title,
+          author,
           COUNT(*) AS downloads
         FROM books
         GROUP BY title
@@ -38,6 +40,7 @@ export async function getPopularBooks() {
     const books: PopularBook[] = result.rows.map((row) => ({
       id: String(row.id), // Ensure id is a string
       title: row.title as string,
+      author: row.author as string,
       downloads: Number(row.downloads), // Ensure downloads is a number
     }));
 
