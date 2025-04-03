@@ -1,7 +1,7 @@
 "use client";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/app-sidebar";
-import AiChatbot from "@/components/ai-chatbot";
+import AiChatbot from "./ai-chatbot";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import EbookFinder from "@/components/ebook-finder";
 import BookSearch from "./ebook-search";
