@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import Banner from "@/components/ui/cbanner";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -35,10 +35,23 @@ export default function SignIn() {
 
       if (result?.error) {
         setError("Invalid email or password");
-      } else {
-        router.push("/chatbot"); // Redirect to the chatbot page
-        router.refresh(); // Refresh the page to get the updated session
+        return;
       }
+
+      const session = await getSession();
+      if (!session?.user) {
+        setError("Session not found. Please try again.");
+        return;
+      }
+
+      const isAdmin = session.user.isAdmin;
+
+      if (isAdmin) {
+        router.push("/admin");
+      } else {
+        router.push("/chatbot");
+      }
+      router.refresh();
     } catch {
       setError("An error occurred during sign in");
     } finally {
@@ -73,17 +86,10 @@ export default function SignIn() {
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
                   </div>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                  />
+                  <Input id="password" name="password" type="password" required />
                 </div>
 
-                {error && (
-                  <p className="text-sm text-red-500 text-center">{error}</p>
-                )}
+                {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Signing in..." : "Login"}
@@ -92,16 +98,12 @@ export default function SignIn() {
               <div className="grid mt-4 text-center text-sm">
                 <Link
                   href="/forgot-password"
-                  className="inline-block text-sm underline-offset-4 hover:underline"
-                >
+                  className="inline-block text-sm underline-offset-4 hover:underline">
                   Forgot your password?
                 </Link>
                 <div>
                   Don&apos;t have an account?
-                  <Link
-                    href="/register"
-                    className="underline underline-offset-4"
-                  >
+                  <Link href="/register" className="underline underline-offset-4">
                     Register
                   </Link>
                 </div>
