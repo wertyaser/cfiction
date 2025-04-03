@@ -12,61 +12,17 @@ interface Activity {
   query: string | null;
   timestamp: string;
 }
-// Initialize Turso client
+export async function getPopularBooks() {
+  // Placeholder data
+  return [
+    { id: "1", title: "1984", downloads: 245 },
+    { id: "2", title: "The Great Gatsby", downloads: 189 },
+    { id: "3", title: "To Kill a Mockingbird", downloads: 156 },
+    { id: "4", title: "Pride and Prejudice", downloads: 132 },
+    { id: "5", title: "The Catcher in the Rye", downloads: 98 },
+  ];
+}
 
-// export async function getDashboardStats() {
-//   try {
-//     // Get total users
-//     const usersResult = await db.execute({
-//       sql: "SELECT COUNT(*) as count FROM users",
-//       args: [],
-//     });
-
-//     const totalUsers = usersResult.rows[0].count;
-
-//     // Get total searches (from books table, assuming each entry represents a search)
-//     const searchesResult = await db.execute({
-//       sql: "SELECT COUNT(*) as count FROM books",
-//       args: [],
-//     });
-//     const totalSearches = searchesResult.rows[0].count;
-
-//     // Get total downloads (this is a simplification - in a real app, you might have a separate downloads table)
-//     const downloadsResult = await db.execute({
-//       sql: "SELECT COUNT(*) as count FROM books",
-//       args: [],
-//     });
-
-//     const totalDownloads = downloadsResult.rows[0].count;
-
-//     // Get active users this week
-//     const activeUsersResult = await db.execute({
-//       sql: `
-//         SELECT COUNT(DISTINCT userId) as count
-//         FROM sessions
-//         WHERE expires > datetime('now', '-7 days')
-//       `,
-//       args: [],
-//     });
-//     const activeUsers = activeUsersResult.rows[0].count;
-
-//     return {
-//       totalUsers,
-//       totalSearches,
-//       totalDownloads,
-//       activeUsers,
-//     };
-//   } catch (error) {
-//     console.error("Error fetching dashboard stats:", error);
-//     // Return default values if there's an error
-//     return {
-//       totalUsers: 0,
-//       totalSearches: 0,
-//       totalDownloads: 0,
-//       activeUsers: 0,
-//     };
-//   }
-// }
 export async function getRecentActivities(): Promise<Activity[]> {
   try {
     const currentDate = new Date();
