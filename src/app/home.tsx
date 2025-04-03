@@ -1,4 +1,3 @@
-"use client";
 import About from "@/components/home/about";
 import ContactUs from "@/components/home/contact-us";
 import Preview from "@/components/home/preview";
@@ -10,7 +9,7 @@ import Image from "next/image";
 // import { useEffect, useState } from "react";
 // import dynamic from "next/dynamic";
 
-export default function Home() {
+export default async function Home() {
   // const NoSSR = dynamic(() => import("../components/no-ssr"), { ssr: false });
   return (
     <div className="bg-background text-foreground">
