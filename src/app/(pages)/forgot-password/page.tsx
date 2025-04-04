@@ -4,11 +4,13 @@ import { useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +23,11 @@ export default function ForgotPassword() {
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || "Failed to send reset link");
-        setMessage("Reset link sent to your email!");
+        toast({
+          title: "Success",
+          description: "Reset link sent to your email. Please check your inbox.",
+          variant: "default",
+        });
       } catch (error) {
         setMessage(error instanceof Error ? error.message : "An error occurred. Try again.");
       }
