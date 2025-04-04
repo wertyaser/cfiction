@@ -115,6 +115,210 @@ export async function getAllUsers(): Promise<User[]> {
   }
 }
 
+// export async function editInformation(formData: FormData) {
+//   const id = formData.get("id") as string;
+//   const name = formData.get("name") as string;
+//   const email = formData.get("email") as string;
+//   const newPassword = formData.get("new-password") as string;
+//   const confirmPassword = formData.get("confirm-password") as string;
+
+//   if (!id) throw new Error("User ID is required");
+//   if (!name || name.trim() === "") throw new Error("Name is required");
+//   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+//     throw new Error("A valid email is required");
+//   }
+
+//   let hashedPassword: string | undefined;
+//   if (newPassword || confirmPassword) {
+//     if (newPassword !== confirmPassword) {
+//       throw new Error("Passwords do not match");
+//     }
+//     if (newPassword.length < 6) {
+//       throw new Error("Password must be at least 6 characters long");
+//     }
+//     hashedPassword = await bcrypt.hash(newPassword, 10);
+//   }
+
+//   console.log("Editing user:", { id, name, email, hashedPassword });
+
+//   try {
+//     const updates: string[] = [];
+//     const args: (string | undefined)[] = [];
+
+//     if (name) {
+//       updates.push("name = ?");
+//       args.push(name);
+//     }
+//     if (email) {
+//       updates.push("email = ?");
+//       args.push(email);
+//     }
+//     if (hashedPassword) {
+//       updates.push("password = ?");
+//       args.push(hashedPassword);
+//     }
+
+//     if (updates.length === 0) {
+//       throw new Error("No changes provided");
+//     }
+
+//     args.push(id);
+//     const sql = `UPDATE users SET ${updates.join(", ")} WHERE id = ?`;
+
+//     await db.execute({
+//       sql,
+//       args: args.filter((arg): arg is string => arg !== undefined),
+//     });
+
+//     revalidatePath("/chatbot");
+//     console.log("User updated successfully");
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     throw error instanceof Error ? error : new Error("Failed to update user");
+//   }
+// }
+
+// export async function editInformation(formData: FormData) {
+//   const id = formData.get("id") as string;
+//   const name = formData.get("name") as string;
+//   const email = formData.get("email") as string;
+//   const newPassword = formData.get("new-password") as string;
+//   const confirmPassword = formData.get("confirm-password") as string;
+
+//   if (newPassword !== confirmPassword) {
+//     throw new Error("Passwords do not match");
+//   }
+//   if (!newPassword || newPassword.length < 6) {
+//     throw new Error("Password must be at least 6 characters long");
+//   }
+//   const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+//   console.log("Editing user:", { id, name, email, hashedPassword });
+
+//   try {
+//     await db.execute({
+//       sql: "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?",
+//       args: [name, email, hashedPassword, id],
+//     });
+//     revalidatePath("/chatbot");
+//     console.log("User updated successfully");
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     throw error;
+//   }
+// }
+
+// export async function editInformation(formData: FormData) {
+//   const id = formData.get("id") as string;
+//   const name = formData.get("name") as string;
+//   const email = formData.get("email") as string;
+//   const newPassword = formData.get("new-password") as string;
+//   const confirmPassword = formData.get("confirm-password") as string;
+
+//   // Basic validation
+//   if (!id) throw new Error("User ID is required");
+//   if (!name || name.trim() === "") throw new Error("Name is required");
+//   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+//     throw new Error("A valid email is required");
+//   }
+
+//   // Password validation (optional)
+//   let hashedPassword: string | undefined;
+//   if (newPassword || confirmPassword) {
+//     if (newPassword !== confirmPassword) {
+//       throw new Error("Passwords do not match");
+//     }
+//     if (newPassword.length < 6) {
+//       throw new Error("Password must be at least 6 characters long");
+//     }
+//     hashedPassword = await bcrypt.hash(newPassword, 10);
+//   }
+
+//   console.log("Editing user:", { id, name, email, hashedPassword });
+
+//   try {
+//     // Update only provided fields
+//     const updates: string[] = [];
+//     const args: (string | undefined)[] = [];
+
+//     if (name) {
+//       updates.push("name = ?");
+//       args.push(name);
+//     }
+//     if (email) {
+//       updates.push("email = ?");
+//       args.push(email);
+//     }
+//     if (hashedPassword) {
+//       updates.push("password = ?");
+//       args.push(hashedPassword);
+//     }
+
+//     if (updates.length === 0) {
+//       throw new Error("No changes provided");
+//     }
+
+//     args.push(id); // ID goes last for WHERE clause
+//     const sql = `UPDATE users SET ${updates.join(", ")} WHERE id = ?`;
+
+//     await db.execute({
+//       sql,
+//       args: [],
+//     });
+
+//     revalidatePath("/chatbot");
+//     console.log("User updated successfully");
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     throw error instanceof Error ? error : new Error("Failed to update user");
+//   }
+// }
+export async function resetPass(formData: FormData) {
+  const id = formData.get("id") as string;
+  const newPassword = formData.get("new-password") as string;
+  const confirmPassword = formData.get("confirm-password") as string;
+
+  if (!id) throw new Error("User ID is required");
+  if (!newPassword || newPassword !== confirmPassword) {
+    throw new Error("Passwords must match and cannot be empty");
+  }
+  if (newPassword.length < 6) {
+    throw new Error("Password must be at least 6 characters long");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  try {
+    await db.execute({
+      sql: "UPDATE users SET password = ? WHERE id = ?",
+      args: [hashedPassword, id],
+    });
+    revalidatePath("/chatbot"); // Adjust path as needed
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    throw error instanceof Error ? error : new Error("Failed to reset password");
+  }
+}
+
+export async function edit(formData: FormData) {
+  const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+
+  console.log("Editing user:", { id, name, email });
+
+  try {
+    await db.execute({
+      sql: "UPDATE users SET name = ?, email = ? WHERE id = ?",
+      args: [name, email, id],
+    });
+    console.log("updated successfully");
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+}
+
 export async function editUser(formData: FormData) {
   const id = formData.get("id") as string;
   const name = formData.get("name") as string;
