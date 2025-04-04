@@ -32,6 +32,42 @@ interface User {
 }
 
 // USER CRUD OPERATIONS
+export async function addUser(formData: FormData) {
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const adminStatus = formData.get("adminStatus") as "admin" | "user";
+  const isAdmin = adminStatus === "admin" ? 1 : 0;
+
+  // Basic validation
+  if (!name || !email || !password) {
+    throw new Error("Name, email, and password are required");
+  }
+  if (password.length < 6) {
+    throw new Error("Password must be at least 6 characters long");
+  }
+
+  // Hash password if using bcrypt
+  const hashedPassword = await bcrypt.hash(password, 10);
+  // const hashedPassword = password; // Placeholder without hashing
+
+  console.log("Adding user:", { name, email, adminStatus });
+
+  try {
+    const result = await db.execute({
+      sql: `
+        INSERT INTO users (name, email, password, isAdmin, created_at)
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+      `,
+      args: [name, email, hashedPassword, isAdmin],
+    });
+    console.log("Add user result:", result);
+  } catch (error) {
+    console.error("Error adding user:", error);
+    throw error;
+  }
+}
+
 export async function getAllUsers(): Promise<User[]> {
   try {
     const result = await db.execute({
