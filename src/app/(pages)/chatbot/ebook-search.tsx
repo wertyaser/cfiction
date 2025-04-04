@@ -11,12 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import { saveSearchQuery } from "@/app/api/books/books";
 // import { useRouter } from "next/navigation";
@@ -88,9 +83,7 @@ export default function BookSearch() {
 
   const handleSourceToggle = (source: string) => {
     setSelectedSources((prev) =>
-      prev.includes(source)
-        ? prev.filter((s) => s !== source)
-        : [...prev, source]
+      prev.includes(source) ? prev.filter((s) => s !== source) : [...prev, source]
     );
   };
 
@@ -111,9 +104,7 @@ export default function BookSearch() {
 
   return (
     <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-6">
-        Ctrl+Fiction: Multi-Source EBook Search
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Ctrl+Fiction: Multi-Source EBook Search</h1>
       <div className="space-y-4 mb-8">
         <div className="flex flex-wrap gap-6">
           <div className="flex items-center space-x-2">
@@ -193,8 +184,7 @@ export default function BookSearch() {
             <Card
               key={`${book.source || "unknown"}-${book.bookId || index}`}
               className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => handleBookClick(book)}
-            >
+              onClick={() => handleBookClick(book)}>
               <CardContent className="p-0">
                 <div className="flex h-full">
                   <div className="w-1/3 bg-muted flex items-center justify-center p-3">
@@ -208,25 +198,16 @@ export default function BookSearch() {
                       />
                     ) : (
                       <div className="w-full h-40 bg-muted-foreground/10 flex items-center justify-center">
-                        <span className="text-muted-foreground text-sm">
-                          No Cover
-                        </span>
+                        <span className="text-muted-foreground text-sm">No Cover</span>
                       </div>
                     )}
                   </div>
                   <div className="w-2/3 p-4">
-                    <Badge
-                      variant={getSourceVariant(book.source)}
-                      className="mb-2"
-                    >
+                    <Badge variant={getSourceVariant(book.source)} className="mb-2">
                       {book.source || "Unknown Source"}
                     </Badge>
-                    <h3 className="text-lg font-bold line-clamp-2 mb-1">
-                      {book.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {book.author}
-                    </p>
+                    <h3 className="text-lg font-bold line-clamp-2 mb-1">{book.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-2">{book.author}</p>
                     {book.fileFormat && (
                       <TooltipProvider>
                         <Tooltip>
