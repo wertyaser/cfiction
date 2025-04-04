@@ -2,6 +2,7 @@
 import { db } from "@/db";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+
 // interface UserUpdateData {
 //   name: string;
 //   email: string;
@@ -23,12 +24,23 @@ interface PopularBook {
   downloads: number;
 }
 
+export interface TopBookDownload {
+  title: string;
+  author: string;
+  downloadCount: number;
+}
+
 interface User {
   id: string;
   name: string;
   email: string;
   registeredAt: string; // Renamed from created_at for consistency with your mock data
   adminStatus: "admin" | "user"; // Derived or adjust based on your schema
+}
+
+export interface TopSearchQuery {
+  query: string;
+  searchCount: number;
 }
 
 // USER CRUD OPERATIONS
@@ -315,42 +327,52 @@ export async function getDashboardStats() {
   }
 }
 
-export async function getTopSearchedBooks(limit = 10) {
+export async function getTopSearchedQueries(limit = 10): Promise<TopSearchQuery[]> {
   try {
-    // This is a simplified query - in a real app, you would have a proper search_history table
     const result = await db.execute({
       sql: `
-        SELECT title, COUNT(*) as searchCount
-        FROM books
-        GROUP BY title
+        SELECT 
+          query,
+          COUNT(*) as searchCount
+        FROM search_history
+        GROUP BY query
         ORDER BY searchCount DESC
         LIMIT ?
       `,
       args: [limit],
     });
 
-    return result.rows;
+    return result.rows.map((row) => ({
+      query: row.query as string,
+      searchCount: Number(row.searchCount),
+    }));
   } catch (error) {
-    console.error("Error fetching top searched books:", error);
+    console.error("Error fetching top searched queries:", error);
     return [];
   }
 }
 
-export async function getTopDownloadedBooks(limit = 10) {
+export async function getTopDownloadedBooks(limit = 10): Promise<TopBookDownload[]> {
   try {
-    // This is a simplified query - in a real app, you would have a proper downloads table
     const result = await db.execute({
       sql: `
-        SELECT title, COUNT(*) as downloadCount
+        SELECT 
+          title,
+          author,
+          COUNT(*) as downloadCount
         FROM books
-        GROUP BY title
+        GROUP BY title, author
         ORDER BY downloadCount DESC
         LIMIT ?
       `,
       args: [limit],
     });
 
-    return result.rows;
+    return result.rows.map((row) => ({
+      title: row.title as string,
+      author: row.author as string,
+      downloadCount: Number(row.downloadCount),
+    }));
   } catch (error) {
     console.error("Error fetching top downloaded books:", error);
     return [];
