@@ -8,6 +8,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/sheet";
 import { DownloadedBook, SearchHistoryItem } from "@/types/next-auth";
 import { useToast } from "@/hooks/use-toast";
+import AccountInformation from "./sidebar-header";
 
 const items = [
   {
@@ -43,6 +45,11 @@ const items = [
     icon: LibraryBig,
     content: "Here you can find the details about the sources of your books.",
   },
+  // {
+  //   title: "Account Settings",
+  //   icon: CircleUser,
+  //   content: "Here you can find the details about your account.",
+  // },
 ];
 
 const sources = [
@@ -152,6 +159,9 @@ export default function AppSidebar() {
 
   return (
     <Sidebar>
+      <SidebarHeader>
+        <AccountInformation />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Theme</SidebarGroupLabel>
