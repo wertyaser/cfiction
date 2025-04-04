@@ -4,7 +4,7 @@ import { db } from "@/db";
 import type { Book } from "@/types/next-auth";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { randomUUID } from "crypto";
+// import { randomUUID } from "crypto";
 
 async function getCurrentUserId() {
   const session = await getServerSession(authOptions);
@@ -34,14 +34,7 @@ export async function saveBook(book: Book) {
             SET title = ?, author = ?, bookUrl = ?, downloadUrl = ?, created_at = CURRENT_TIMESTAMP
             WHERE bookId = ? AND userId = ?
           `,
-        args: [
-          book.title,
-          book.author,
-          book.bookUrl,
-          book.downloadUrl,
-          book.bookId,
-          userId,
-        ],
+        args: [book.title, book.author, book.bookUrl, book.downloadUrl, book.bookId, userId],
       });
     } else {
       // Insert new book
@@ -50,14 +43,7 @@ export async function saveBook(book: Book) {
             INSERT INTO books (bookId, title, author, bookUrl, downloadUrl, userId)
             VALUES (?, ?, ?, ?, ?, ?)
           `,
-        args: [
-          book.bookId,
-          book.title,
-          book.author,
-          book.bookUrl,
-          book.downloadUrl,
-          userId,
-        ],
+        args: [book.bookId, book.title, book.author, book.bookUrl, book.downloadUrl, userId],
       });
     }
     return { success: true };
@@ -101,14 +87,13 @@ export async function saveSearchQuery(query: string) {
     const userId = await getCurrentUserId();
 
     // Generate a unique ID for the search history entry
-    const id = randomUUID();
 
     // Insert search query into the search_history table
     await db.execute({
       sql: `INSERT INTO search_history 
-            (id, userId, query, created_at) 
-            VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
-      args: [id, userId, query],
+            (userId, query, created_at) 
+            VALUES (?, ?, CURRENT_TIMESTAMP)`,
+      args: [userId, query],
     });
 
     return { success: true };
