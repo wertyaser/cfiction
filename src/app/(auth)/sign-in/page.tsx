@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function SignIn() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function SignIn() {
   // const callbackUrl = searchParams.get("callbackUrl") || "/chatbot";
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,6 +89,15 @@ export default function SignIn() {
                     <Label htmlFor="password">Password</Label>
                   </div>
                   <Input id="password" name="password" type="password" required />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label="Toggle password visibility">
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
                 </div>
 
                 {error && <p className="text-sm text-red-500 text-center">{error}</p>}
