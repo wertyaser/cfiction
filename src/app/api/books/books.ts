@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import type { Book } from "@/types/next-auth";
+// import type { Book } from "@/types/next-auth";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 // import { randomUUID } from "crypto";
@@ -14,41 +14,31 @@ async function getCurrentUserId() {
   return session.user.id;
 }
 
+interface Book {
+  bookId: string;
+  title: string;
+  author: string;
+  bookUrl: string;
+  downloadUrl: string;
+}
 //function to save a book to the database
 export async function saveBook(book: Book) {
   try {
     // Get the current user ID
     const userId = await getCurrentUserId();
 
-    //Check if the book already exists
-    const existingBook = await db.execute({
-      sql: "SELECT bookId FROM books WHERE bookId = ? AND userId = ?",
-      args: [book.bookId, userId],
+    // Always insert a new book (allowing duplicates)
+    await db.execute({
+      sql: `
+        INSERT INTO books (bookId, title, author, bookUrl, downloadUrl, userId, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+      `,
+      args: [book.bookId, book.title, book.author, book.bookUrl, book.downloadUrl, userId],
     });
 
-    if (existingBook.rows.length > 0) {
-      // Update existing book
-      await db.execute({
-        sql: `
-            UPDATE books 
-            SET title = ?, author = ?, bookUrl = ?, downloadUrl = ?, created_at = CURRENT_TIMESTAMP
-            WHERE bookId = ? AND userId = ?
-          `,
-        args: [book.title, book.author, book.bookUrl, book.downloadUrl, book.bookId, userId],
-      });
-    } else {
-      // Insert new book
-      await db.execute({
-        sql: `
-            INSERT INTO books (bookId, title, author, bookUrl, downloadUrl, userId)
-            VALUES (?, ?, ?, ?, ?, ?)
-          `,
-        args: [book.bookId, book.title, book.author, book.bookUrl, book.downloadUrl, userId],
-      });
-    }
     return { success: true };
   } catch (error) {
-    console.error("Error saving book", error);
+    console.error("Error saving book:", error);
     return { success: false, error };
   }
 }
