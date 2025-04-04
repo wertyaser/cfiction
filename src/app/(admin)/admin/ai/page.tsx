@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 export default function AiChatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([
     {
-      role: "assis",
+      role: "assistant",
       content: "Hi! I'm Ctrl, your AI Librarian. How can I help you today?",
     },
   ]);
