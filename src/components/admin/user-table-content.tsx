@@ -1,8 +1,8 @@
 // components/UserTableContent.tsx
 "use client";
 
-import { startTransition, useState } from "react";
-import { editUser, resetPassword } from "@/lib/admin";
+import { useState, useTransition } from "react";
+import { editUser, resetPassword, deleteUser as deleteUsers } from "@/lib/admin";
 import {
   Table,
   TableBody,
@@ -43,6 +43,7 @@ export default function UserTableContent({ users }: { users: User[] }) {
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
@@ -68,6 +69,18 @@ export default function UserTableContent({ users }: { users: User[] }) {
       } catch (error) {
         console.error("Failed to reset password:", error);
         alert("Failed to reset password. Check the console for details.");
+      }
+    });
+  };
+
+  const handleDeleteUser = (formData: FormData) => {
+    startTransition(async () => {
+      try {
+        await deleteUsers(formData);
+        setDeleteUser(null);
+      } catch (error) {
+        console.error("Failed to delete user:", error);
+        alert("Failed to delete user. Check the console for details.");
       }
     });
   };
@@ -175,7 +188,9 @@ export default function UserTableContent({ users }: { users: User[] }) {
               <Button variant="outline" onClick={() => setUserToEdit(null)}>
                 Cancel
               </Button>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Saving..." : "Save Changes"}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -221,7 +236,9 @@ export default function UserTableContent({ users }: { users: User[] }) {
               <Button variant="outline" onClick={() => setResetPasswordUser(null)}>
                 Cancel
               </Button>
-              <Button type="submit">Reset Password</Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Resetting..." : "Reset Password"}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -236,14 +253,14 @@ export default function UserTableContent({ users }: { users: User[] }) {
               Are you sure you want to delete {deleteUser?.name}? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <form action="/admin/users/delete" method="POST">
+          <form action={handleDeleteUser}>
             <input type="hidden" name="id" value={deleteUser?.id} />
             <DialogFooter>
               <Button variant="outline" onClick={() => setDeleteUser(null)}>
                 Cancel
               </Button>
-              <Button type="submit" variant="destructive">
-                Delete
+              <Button type="submit" variant="destructive" disabled={isPending}>
+                {isPending ? "Deleting..." : "Delete"}
               </Button>
             </DialogFooter>
           </form>
