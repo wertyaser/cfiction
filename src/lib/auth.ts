@@ -1,5 +1,5 @@
 // lib/auth.ts
-import NextAuth, { type AuthOptions } from "next-auth";
+import NextAuth, { getServerSession, type AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 // import GoogleProvider from "next-auth/providers/google";
 import { TursoAdapter } from "@/lib/turso-adapter";
@@ -73,3 +73,16 @@ export const authOptions: AuthOptions = {
 };
 
 export default NextAuth(authOptions);
+
+// Add this function to get the current user
+export async function getCurrentUser() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) return null;
+
+  return {
+    id: session.user.id,
+    name: session.user.name || "",
+    email: session.user.email || "",
+    isAdmin: session.user.isAdmin || false,
+  };
+}
