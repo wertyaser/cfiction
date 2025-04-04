@@ -11,9 +11,7 @@ export default function AnalyticsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Book Analytics</h1>
-        <p className="text-muted-foreground">
-          Analyze book search and download patterns.
-        </p>
+        <p className="text-muted-foreground">Analyze book search and download patterns.</p>
       </div>
 
       <Card>
@@ -21,11 +19,7 @@ export default function AnalyticsPage() {
           <CardTitle>Search & Download Trends</CardTitle>
         </CardHeader>
         <CardContent>
-          <Suspense
-            fallback={
-              <div className="h-80 w-full bg-muted/20 animate-pulse rounded-md" />
-            }
-          >
+          <Suspense fallback={<div className="h-80 w-full bg-muted/20 animate-pulse rounded-md" />}>
             <BookAnalyticsChart />
           </Suspense>
         </CardContent>
