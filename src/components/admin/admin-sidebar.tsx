@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, BookOpen, Settings, LogOut, Search } from "lucide-react";
+import { LayoutDashboard, Users, BookOpen, LogOut, Search, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -24,14 +24,14 @@ const navItems = [
     icon: BookOpen,
   },
   {
-    title: "Ebook Search/Chatbot",
-    href: "/chatbot",
+    title: "Ebook Search",
+    href: "/admin/ebook",
     icon: Search,
   },
   {
-    title: "Settings",
-    href: "/admin/settings",
-    icon: Settings,
+    title: "AI Chatbot",
+    href: "/admin/ai",
+    icon: Bot,
   },
 ];
 
