@@ -43,6 +43,12 @@ export interface TopSearchQuery {
   searchCount: number;
 }
 
+export interface MonthlyStat {
+  month: string; // e.g., "Jan"
+  searches: number;
+  books: number;
+}
+
 // USER CRUD OPERATIONS
 export async function addUser(formData: FormData) {
   const name = formData.get("name") as string;
@@ -273,6 +279,114 @@ export async function getRecentActivities(): Promise<Activity[]> {
   } catch (error) {
     console.error("Error fetching recent activities:", error);
     return [];
+  }
+}
+
+export async function getMonthlyStats(): Promise<{
+  totalSearches: number;
+  totalBooks: number; // Changed from totalDownloads to totalBooks
+  monthlyStats: MonthlyStat[];
+}> {
+  try {
+    // Get total searches
+    const searchesResult = await db.execute({
+      sql: "SELECT COUNT(*) as count FROM search_history",
+      args: [],
+    });
+    const totalSearches = searchesResult.rows[0].count ?? 0;
+
+    // Get total books (instead of downloads)
+    const booksResult = await db.execute({
+      sql: "SELECT COUNT(*) as count FROM books",
+      args: [],
+    });
+    const totalBooks = booksResult.rows[0].count ?? 0;
+
+    // Get monthly stats for the last 12 months
+    const monthlySearchesResult = await db.execute({
+      sql: `
+        SELECT 
+          strftime('%Y-%m', created_at) as month,
+          COUNT(id) as searches
+        FROM search_history
+        GROUP BY strftime('%Y-%m', created_at)
+        ORDER BY month DESC
+        LIMIT 12
+      `,
+      args: [],
+    });
+
+    const monthlyBooksResult = await db.execute({
+      sql: `
+        SELECT 
+          strftime('%Y-%m', created_at) as month,
+          COUNT(id) as books
+        FROM books
+        GROUP BY strftime('%Y-%m', created_at)
+        ORDER BY month DESC
+        LIMIT 12
+      `,
+      args: [],
+    });
+    // Combine searches and books into monthlyStats
+    const monthlyStatsMap: { [key: string]: MonthlyStat } = {};
+    // Populate searches
+    monthlySearchesResult.rows.forEach((row) => {
+      const month = new Date(row.month + "-01").toLocaleString("default", { month: "short" });
+      monthlyStatsMap[month] = {
+        month,
+        searches: Number(row.searches),
+        books: 0, // Default books to 0
+      };
+    });
+
+    // Populate books, merging with existing months or adding new ones
+    monthlyBooksResult.rows.forEach((row) => {
+      const month = new Date(row.month + "-01").toLocaleString("default", { month: "short" });
+      if (monthlyStatsMap[month]) {
+        monthlyStatsMap[month].books = Number(row.books);
+      } else {
+        monthlyStatsMap[month] = {
+          month,
+          searches: 0, // Default searches to 0
+          books: Number(row.books),
+        };
+      }
+    });
+
+    // Convert to array and sort by month (oldest to newest)
+    const monthlyStats: MonthlyStat[] = Object.values(monthlyStatsMap)
+      .sort((a, b) => {
+        const monthOrder = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
+      })
+      .slice(-12); // Limit to last 12 months
+
+    return {
+      totalSearches: Number(totalSearches),
+      totalBooks: Number(totalBooks),
+      monthlyStats,
+    };
+  } catch (error) {
+    console.error("Error fetching dashboard stats:", error);
+    return {
+      totalSearches: 0,
+      totalBooks: 0,
+      monthlyStats: [],
+    };
   }
 }
 
