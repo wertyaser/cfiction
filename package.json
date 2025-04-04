@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:init": "tsx scripts/init-db.ts",
-    "ts-check": "tsc --noEmit"
+    "ts-check": "tsc --noEmit",
+    "emmail": "email dev"
   },
   "dependencies": {
     "@libsql/client": "^0.12.0",
@@ -45,6 +46,7 @@
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "recharts": "^2.15.1",
+    "resend": "^4.2.0",
     "sonner": "^2.0.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
