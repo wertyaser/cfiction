@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { editUser, resetPassword, deleteUser as deleteUsers } from "@/lib/admin";
+import { editUser, resetPassword, deleteUser as deleteUsers, addUser } from "@/lib/admin";
 import {
   Table,
   TableBody,
@@ -29,7 +29,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MoreHorizontal, Edit, Trash, Key } from "lucide-react";
+import { MoreHorizontal, Edit, Trash, Key, Search, RefreshCw } from "lucide-react";
+import PasswordInput from "../password-input";
 
 interface User {
   id: string;
@@ -39,21 +40,53 @@ interface User {
   adminStatus: "admin" | "user";
 }
 
-export default function UserTableContent({ users }: { users: User[] }) {
+export default function UserTableContent({ users: initialUsers }: { users: User[] }) {
+  const [users, setUsers] = useState<User[]>(initialUsers); // Manage users as state
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
+  };
+
+  const handleAddUser = (formData: FormData) => {
+    startTransition(async () => {
+      try {
+        await addUser(formData);
+        setIsAddUserOpen(false); // Close dialog on success
+        handleRefresh(); // Refresh table
+      } catch (error) {
+        console.error("Failed to add user:", error);
+        alert("Failed to add user. Check the console for details.");
+      }
+    });
+  };
+
+  const handleRefresh = () => {
+    startTransition(async () => {
+      try {
+        const response = await fetch("/api/user");
+        if (!response.ok) {
+          throw new Error("Failed to fetch users");
+        }
+        const updatedUsers: User[] = await response.json();
+        setUsers(updatedUsers);
+      } catch (error) {
+        console.error("Failed to refresh users:", error);
+        alert("Failed to refresh table. Check the console for details.");
+      }
+    });
   };
 
   const handleEditSubmit = (formData: FormData) => {
     startTransition(async () => {
       try {
         await editUser(formData);
-        setUserToEdit(null); // Close dialog on success
+        setUserToEdit(null);
+        handleRefresh(); // Refresh table after edit
       } catch (error) {
         console.error("Failed to edit user:", error);
         alert("Failed to save changes. Check the console for details.");
@@ -65,7 +98,8 @@ export default function UserTableContent({ users }: { users: User[] }) {
     startTransition(async () => {
       try {
         await resetPassword(formData);
-        setResetPasswordUser(null); // Close dialog on success
+        setResetPasswordUser(null);
+        handleRefresh(); // Refresh table after reset
       } catch (error) {
         console.error("Failed to reset password:", error);
         alert("Failed to reset password. Check the console for details.");
@@ -78,6 +112,7 @@ export default function UserTableContent({ users }: { users: User[] }) {
       try {
         await deleteUsers(formData);
         setDeleteUser(null);
+        handleRefresh(); // Refresh table after delete
       } catch (error) {
         console.error("Failed to delete user:", error);
         alert("Failed to delete user. Check the console for details.");
@@ -87,6 +122,24 @@ export default function UserTableContent({ users }: { users: User[] }) {
 
   return (
     <>
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input type="search" placeholder="Search users..." className="pl-8 w-full" />
+        </div>
+        <Button
+          variant="outline"
+          className="flex items-center gap-2"
+          onClick={handleRefresh}
+          disabled={isPending}>
+          <RefreshCw className={`h-4 w-4 ${isPending ? "animate-spin" : ""}`} />
+          <span>{isPending ? "Refreshing..." : "Refresh"}</span>
+        </Button>
+        <Button onClick={() => setIsAddUserOpen(true)} className="flex items-center gap-2">
+          <Edit className="h-4 w-4" />
+          <span>Add User</span>
+        </Button>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -145,6 +198,61 @@ export default function UserTableContent({ users }: { users: User[] }) {
         </Table>
       </div>
 
+      {/* Add User Dialog */}
+      <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New User</DialogTitle>
+            <DialogDescription>Create a new user account.</DialogDescription>
+          </DialogHeader>
+          <form action={handleAddUser} className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name
+              </Label>
+              <Input id="name" name="name" className="col-span-3" required />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-right">
+                Email
+              </Label>
+              <Input id="email" name="email" type="email" className="col-span-3" required />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="password" className="text-right">
+                Password
+              </Label>
+              <PasswordInput id="password" name="password" required />
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="adminStatus" className="text-right">
+                Admin Status
+              </Label>
+              <select
+                id="adminStatus"
+                name="adminStatus"
+                defaultValue="user"
+                className="col-span-3 flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm">
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsAddUserOpen(false)}
+                disabled={isPending}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Adding..." : "Add User"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       {/* Edit User Dialog */}
       <Dialog open={!!userToEdit} onOpenChange={() => setUserToEdit(null)}>
         <DialogContent>
@@ -185,7 +293,7 @@ export default function UserTableContent({ users }: { users: User[] }) {
               </select>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setUserToEdit(null)}>
+              <Button variant="outline" onClick={() => setUserToEdit(null)} disabled={isPending}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -203,7 +311,7 @@ export default function UserTableContent({ users }: { users: User[] }) {
             <DialogTitle>Reset Password</DialogTitle>
             <DialogDescription>Set a new password for {resetPasswordUser?.name}.</DialogDescription>
             <DialogDescription className="text-center text-red-500">
-              Password must be atleast 6 characters long
+              Password must be at least 6 characters long
             </DialogDescription>
           </DialogHeader>
           <form action={handleResetPassword} method="POST" className="grid gap-4 py-4">
@@ -212,28 +320,19 @@ export default function UserTableContent({ users }: { users: User[] }) {
               <Label htmlFor="new-password" className="text-right">
                 New Password
               </Label>
-              <Input
-                id="new-password"
-                name="new-password"
-                type="password"
-                className="col-span-3"
-                required
-              />
+              <PasswordInput id="new-password" name="new-password" required />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="confirm-password" className="text-right">
                 Confirm Password
               </Label>
-              <Input
-                id="confirm-password"
-                name="confirm-password"
-                type="password"
-                className="col-span-3"
-                required
-              />
+              <PasswordInput id="confirm-password" name="confirm-password" required />
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setResetPasswordUser(null)}>
+              <Button
+                variant="outline"
+                onClick={() => setResetPasswordUser(null)}
+                disabled={isPending}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -256,7 +355,7 @@ export default function UserTableContent({ users }: { users: User[] }) {
           <form action={handleDeleteUser}>
             <input type="hidden" name="id" value={deleteUser?.id} />
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteUser(null)}>
+              <Button variant="outline" onClick={() => setDeleteUser(null)} disabled={isPending}>
                 Cancel
               </Button>
               <Button type="submit" variant="destructive" disabled={isPending}>
