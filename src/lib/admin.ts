@@ -113,15 +113,38 @@ export async function resetPassword(formData: FormData) {
 export async function deleteUser(formData: FormData) {
   const id = formData.get("id") as string;
 
+  console.log("Deleting user:", { id });
+
   try {
     await db.execute({
       sql: "DELETE FROM users WHERE id = ?",
       args: [id],
     });
+    // console.log("Delete result:", id);
+    revalidatePath("/admin/users");
   } catch (error) {
     console.error("Error deleting user:", error);
+    throw error;
   }
 }
+
+// export async function deleteUser(formData: FormData) {
+//   const id = formData.get("id") as string;
+
+//   console.log("Deleting user:", { id });
+
+//   try {
+//     const result = await db.execute({
+//       sql: "DELETE FROM users WHERE id = ?",
+//       args: [id],
+//     });
+//     console.log("Delete result:", result);
+//     revalidatePath("/admin/users"); // Adjust to your route
+//   } catch (error) {
+//     console.error("Error deleting user:", error);
+//     throw error;
+//   }
+// }
 
 export async function getPopularBooks() {
   try {
