@@ -39,7 +39,6 @@ import {
   Edit,
   Trash,
   Key,
-  Search,
   RefreshCw,
 } from "lucide-react";
 import PasswordInput from "../password-input";
