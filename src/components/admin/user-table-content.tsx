@@ -2,7 +2,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { editUser, resetPassword, deleteUser as deleteUsers, addUser } from "@/lib/admin";
+import {
+  editUser,
+  resetPassword,
+  deleteUser as deleteUsers,
+  addUser,
+} from "@/lib/admin";
 import {
   Table,
   TableBody,
@@ -29,7 +34,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MoreHorizontal, Edit, Trash, Key, Search, RefreshCw } from "lucide-react";
+import {
+  MoreHorizontal,
+  Edit,
+  Trash,
+  Key,
+  Search,
+  RefreshCw,
+} from "lucide-react";
 import PasswordInput from "../password-input";
 
 interface User {
@@ -40,7 +52,11 @@ interface User {
   adminStatus: "admin" | "user";
 }
 
-export default function UserTableContent({ users: initialUsers }: { users: User[] }) {
+export default function UserTableContent({
+  users: initialUsers,
+}: {
+  users: User[];
+}) {
   const [users, setUsers] = useState<User[]>(initialUsers); // Manage users as state
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
@@ -122,20 +138,20 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input type="search" placeholder="Search users..." className="pl-8 w-full" />
-        </div>
+      <div className="flex flex-col justify-end sm:flex-row gap-4 mb-6">
         <Button
           variant="outline"
           className="flex items-center gap-2"
           onClick={handleRefresh}
-          disabled={isPending}>
+          disabled={isPending}
+        >
           <RefreshCw className={`h-4 w-4 ${isPending ? "animate-spin" : ""}`} />
           <span>{isPending ? "Refreshing..." : "Refresh"}</span>
         </Button>
-        <Button onClick={() => setIsAddUserOpen(true)} className="flex items-center gap-2">
+        <Button
+          onClick={() => setIsAddUserOpen(true)}
+          className="flex items-center gap-2" 
+        >
           <Edit className="h-4 w-4" />
           <span>Add User</span>
         </Button>
@@ -159,7 +175,11 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{formatDate(user.registeredAt)}</TableCell>
                   <TableCell>
-                    <Badge variant={user.adminStatus === "admin" ? "default" : "secondary"}>
+                    <Badge
+                      variant={
+                        user.adminStatus === "admin" ? "default" : "secondary"
+                      }
+                    >
                       {user.adminStatus}
                     </Badge>
                   </TableCell>
@@ -174,12 +194,15 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
                         <DropdownMenuItem onClick={() => setUserToEdit(user)}>
                           <Edit className="mr-2 h-4 w-4" /> Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setResetPasswordUser(user)}>
+                        <DropdownMenuItem
+                          onClick={() => setResetPasswordUser(user)}
+                        >
                           <Key className="mr-2 h-4 w-4" /> Reset Password
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive"
-                          onClick={() => setDeleteUser(user)}>
+                          onClick={() => setDeleteUser(user)}
+                        >
                           <Trash className="mr-2 h-4 w-4" /> Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -189,7 +212,10 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground"
+                >
                   No users found.
                 </TableCell>
               </TableRow>
@@ -216,7 +242,13 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
               <Label htmlFor="email" className="text-right">
                 Email
               </Label>
-              <Input id="email" name="email" type="email" className="col-span-3" required />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                className="col-span-3"
+                required
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="password" className="text-right">
@@ -233,7 +265,8 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
                 id="adminStatus"
                 name="adminStatus"
                 defaultValue="user"
-                className="col-span-3 flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm">
+                className="col-span-3 flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm"
+              >
                 <option value="admin">Admin</option>
                 <option value="user">User</option>
               </select>
@@ -242,7 +275,8 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
               <Button
                 variant="outline"
                 onClick={() => setIsAddUserOpen(false)}
-                disabled={isPending}>
+                disabled={isPending}
+              >
                 Cancel
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -258,15 +292,26 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
-            <DialogDescription>Make changes to the user account.</DialogDescription>
+            <DialogDescription>
+              Make changes to the user account.
+            </DialogDescription>
           </DialogHeader>
-          <form action={handleEditSubmit} method="POST" className="grid gap-4 py-4">
+          <form
+            action={handleEditSubmit}
+            method="POST"
+            className="grid gap-4 py-4"
+          >
             <input type="hidden" name="id" value={userToEdit?.id} />
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
                 Name
               </Label>
-              <Input id="name" name="name" defaultValue={userToEdit?.name} className="col-span-3" />
+              <Input
+                id="name"
+                name="name"
+                defaultValue={userToEdit?.name}
+                className="col-span-3"
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
@@ -287,13 +332,18 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
                 id="adminStatus"
                 name="adminStatus"
                 defaultValue={userToEdit?.adminStatus}
-                className="col-span-3 flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm">
+                className="col-span-3 flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm"
+              >
                 <option value="admin">Admin</option>
                 <option value="user">User</option>
               </select>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setUserToEdit(null)} disabled={isPending}>
+              <Button
+                variant="outline"
+                onClick={() => setUserToEdit(null)}
+                disabled={isPending}
+              >
                 Cancel
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -305,16 +355,25 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
       </Dialog>
 
       {/* Reset Password Dialog */}
-      <Dialog open={!!resetPasswordUser} onOpenChange={() => setResetPasswordUser(null)}>
+      <Dialog
+        open={!!resetPasswordUser}
+        onOpenChange={() => setResetPasswordUser(null)}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Reset Password</DialogTitle>
-            <DialogDescription>Set a new password for {resetPasswordUser?.name}.</DialogDescription>
+            <DialogDescription>
+              Set a new password for {resetPasswordUser?.name}.
+            </DialogDescription>
             <DialogDescription className="text-center text-red-500">
               Password must be at least 6 characters long
             </DialogDescription>
           </DialogHeader>
-          <form action={handleResetPassword} method="POST" className="grid gap-4 py-4">
+          <form
+            action={handleResetPassword}
+            method="POST"
+            className="grid gap-4 py-4"
+          >
             <input type="hidden" name="id" value={resetPasswordUser?.id} />
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="new-password" className="text-right">
@@ -326,13 +385,18 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
               <Label htmlFor="confirm-password" className="text-right">
                 Confirm Password
               </Label>
-              <PasswordInput id="confirm-password" name="confirm-password" required />
+              <PasswordInput
+                id="confirm-password"
+                name="confirm-password"
+                required
+              />
             </div>
             <DialogFooter>
               <Button
                 variant="outline"
                 onClick={() => setResetPasswordUser(null)}
-                disabled={isPending}>
+                disabled={isPending}
+              >
                 Cancel
               </Button>
               <Button type="submit" disabled={isPending}>
@@ -349,13 +413,18 @@ export default function UserTableContent({ users: initialUsers }: { users: User[
           <DialogHeader>
             <DialogTitle>Delete User</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete {deleteUser?.name}? This action cannot be undone.
+              Are you sure you want to delete {deleteUser?.name}? This action
+              cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <form action={handleDeleteUser}>
             <input type="hidden" name="id" value={deleteUser?.id} />
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDeleteUser(null)} disabled={isPending}>
+              <Button
+                variant="outline"
+                onClick={() => setDeleteUser(null)}
+                disabled={isPending}
+              >
                 Cancel
               </Button>
               <Button type="submit" variant="destructive" disabled={isPending}>
