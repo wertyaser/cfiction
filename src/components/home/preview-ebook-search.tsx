@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -14,6 +14,17 @@ export default function PreviewEbookSearch() {
         Ctrl+Fiction: Multi-Source EBook Search
       </h1>
       <div className="space-y-4 mb-8">
+        <div className="bg-accent border-l-4 border-foreground p-4 mb-4 rounded-md">
+          <div className="flex items-center">
+            <Sparkles className="h-4 w-4 text-foreground mr-2" />
+            <p className="text-sm text-foreground font-medium">AI Search Suggestions</p>
+          </div>
+          <p className="text-sm text-foreground mt-1">
+            Type a search term and click the sparkle icon (<Sparkles className="h-3 w-3 inline" />)
+            to get AI-powered book suggestions. Use arrow keys to navigate and Enter to select a
+            suggestion.
+          </p>
+        </div>
         <div className="flex flex-wrap gap-6 justify-center sm:justify-start">
           <div className="flex items-center space-x-2">
             <Checkbox id="gutenberg" />
@@ -41,6 +52,13 @@ export default function PreviewEbookSearch() {
           <div className="relative flex-grow">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input type="text" placeholder="Search for ebooks..." className="pl-8" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1 h-8 w-8 text-foreground hover:text-primary"
+              title="Get AI suggestions">
+              <Sparkles className="h-4 w-4" />
+            </Button>
           </div>
           <Button className="w-full sm:w-auto">Search</Button>
         </div>
