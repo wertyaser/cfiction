@@ -10,9 +10,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function PreviewEbookSearch() {
   return (
     <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-6">Ctrl+Fiction: Multi-Source EBook Search</h1>
+      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-center sm:text-left">
+        Ctrl+Fiction: Multi-Source EBook Search
+      </h1>
       <div className="space-y-4 mb-8">
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-wrap gap-6 justify-center sm:justify-start">
           <div className="flex items-center space-x-2">
             <Checkbox id="gutenberg" />
             <Badge variant={"default"}>
@@ -35,12 +37,12 @@ export default function PreviewEbookSearch() {
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-grow">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input type="text" placeholder="Search for ebooks..." className="pl-8" />
           </div>
-          <Button>Search</Button>
+          <Button className="w-full sm:w-auto">Search</Button>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

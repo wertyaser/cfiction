@@ -69,12 +69,12 @@ export default function ContactUs() {
   };
 
   return (
-    <div id="contact-us" className="max-w-4xl mx-auto mt-20">
-      <h2 className="text-5xl font-bold text-center">
+    <div id="contact-us" className="max-w-4xl mx-auto mt-20 px-4 sm:px-6 lg:px-8">
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">
         <span className="font-semibold">Contact Us</span>
       </h2>
-      <div className="flex justify-center items-center">
-        <span className="text-xl font-thin leading-relaxed text-center max-w-3xl">
+      <div className="flex justify-center items-center mt-4">
+        <span className="text-base sm:text-lg lg:text-xl font-thin leading-relaxed text-center max-w-3xl">
           Got a technical issue? Want to send feedback about a beta feature?
           <br />
           Need details about our Business plan? Let us know.
@@ -83,7 +83,7 @@ export default function ContactUs() {
       <Card className="max-w-4xl mx-auto mt-5 p-5">
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-5">
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <Label>Name</Label>
                 <Input
@@ -116,7 +116,7 @@ export default function ContactUs() {
                 onChange={handleChange}
                 required
               />
-              <Button type="submit" disabled={isPending}>
+              <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
                 {isPending ? "Sending..." : "Submit"}
               </Button>
             </div>
@@ -124,12 +124,14 @@ export default function ContactUs() {
           </form>
         </CardContent>
       </Card>
-      <div className="flex justify-center items-center gap-5 mt-5">
+      <div className="flex flex-wrap justify-center items-center gap-5 mt-5">
         {socialMedia.map((social, index) => (
           <a
             key={index}
             href={social.link}
-            className="text-2xl hover:text-blue-700 flex items-center gap-2">
+            className="text-2xl hover:text-blue-700 flex items-center gap-2"
+            target="_blank"
+            rel="noopener noreferrer">
             {social.icon}
           </a>
         ))}

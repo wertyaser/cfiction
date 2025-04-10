@@ -13,8 +13,6 @@ import PasswordInput from "@/components/password-input";
 
 export default function SignIn() {
   const router = useRouter();
-  // const searchParams = useSearchParams();
-  // const callbackUrl = searchParams.get("callbackUrl") || "/chatbot";
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,17 +59,22 @@ export default function SignIn() {
   };
 
   return (
-    <section className="flex flex-row min-h-svh items-center justify-center gap-16">
-      <Banner />
+    <section className="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-16 px-4 sm:px-6 lg:px-8">
+      {/* Banner Section */}
+      <div className="hidden lg:block w-full max-w-md">
+        <Banner />
+      </div>
+
+      {/* Login Form */}
       <div className="w-full max-w-sm flex flex-col gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl text-center">Login Here!</CardTitle>
-            {/* <CardDescription>Login using RTU Email only</CardDescription> */}
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-6">
+                {/* Email Field */}
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -83,6 +86,7 @@ export default function SignIn() {
                   />
                 </div>
 
+                {/* Password Field */}
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
@@ -92,12 +96,16 @@ export default function SignIn() {
                   </div>
                 </div>
 
+                {/* Error Message */}
                 {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
+                {/* Submit Button */}
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Signing in..." : "Login"}
                 </Button>
               </div>
+
+              {/* Links */}
               <div className="grid mt-4 text-center text-sm">
                 <Link
                   href="/forgot-password"
@@ -105,7 +113,7 @@ export default function SignIn() {
                   Forgot your password?
                 </Link>
                 <div>
-                  Don&apos;t have an account?
+                  Don&apos;t have an account?{" "}
                   <Link href="/register" className="underline underline-offset-4">
                     Register
                   </Link>

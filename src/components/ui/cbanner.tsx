@@ -2,24 +2,15 @@ import Image from "next/image";
 
 export default function Banner() {
   return (
-    <div className="flex flex-col justify-center">
-      <div className="py-5 mx-auto">
+    <div className="flex flex-col items-center justify-center text-center lg:text-left">
+      <div className="flex justify-center py-5">
         <Image src="/LOGO.png" width={150} height={150} alt="Logo" />
       </div>
-      <h1 className="text-7xl font-bold">Ctrl + F[iction]</h1>
-      <p className="font-thin text-sm">
-        A cutting-edge <b>AI chatbot</b> designed to effortlessly find and
-        download <b>ebooks</b>, <br />
-        <b>publications</b>, <b>articles</b>, and <b>journals</b> with simple
-        commands.
-        <b>
-          Why waste time <br />
-          browsing when you can access instant results through a free ebooks
-          API?
-        </b>
-        <br />
-        This is the future of digital libraries—efficient, intelligent, and
-        undeniably superior.
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold">Ctrl + F[iction]</h1>
+      <p className="mt-4 max-w-3xl text-base sm:text-lg lg:text-xl font-light leading-relaxed">
+        Unleash a world of <b>ebooks</b> with lightning-fast searches across top libraries and chat
+        with <b>Ctrl</b>, your <b>AI Librarian</b>, for instant answers. Discover, download, and
+        dive in—reading has never been this smart or simple!
       </p>
     </div>
   );

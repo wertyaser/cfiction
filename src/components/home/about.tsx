@@ -1,11 +1,13 @@
 export default function About() {
   return (
-    <section id="about" className="min-h-[60vh] pt-10 px-6 max-w-4xl mx-auto">
-      <h2 className="text-7xl font-semibold flex">
+    <section
+      id="about"
+      className="min-h-[60vh] pt-10 px-6 max-w-4xl mx-auto text-center sm:text-left">
+      <h2 className="text-4xl sm:text-5xl lg:text-7xl font-semibold flex justify-center sm:justify-start">
         <span>A</span>
         <span className="font-thin">bout</span>
       </h2>
-      <p className="mt-4 text-xl font-light leading-relaxed">
+      <p className="mt-4 text-base sm:text-lg lg:text-xl font-light leading-relaxed">
         At Ctrl+Fiction, we&apos;re redefining how you connect with literature. Our mission? To make
         finding and enjoying ebooks effortless, intelligent, and fun. With our powerful multi-source
         search, you can explore treasures from Project Gutenberg, Open Library, and Internet Archive
