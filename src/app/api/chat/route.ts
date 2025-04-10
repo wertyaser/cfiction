@@ -10,7 +10,7 @@ import Together from "together-ai";
 // }
 
 const together = new Together();
-together.apiKey = process.env.TOGETHER_API_KEY || "";
+together.apiKey = process.env.TOGETHER_API_KEY || process.env.TOGETHER_API_KEY2 || "";
 
 export async function POST(request: Request) {
   try {
@@ -28,21 +28,14 @@ export async function POST(request: Request) {
       messages: [systemPrompt, ...messages],
     });
 
-    const aiReply =
-      response.choices[0]?.message?.content || "No response from AI";
+    const aiReply = response.choices[0]?.message?.content || "No response from AI";
 
-    const updatedMessages = [
-      ...messages,
-      { role: "assistant", content: aiReply },
-    ];
+    const updatedMessages = [...messages, { role: "assistant", content: aiReply }];
 
     return NextResponse.json({ messages: updatedMessages }, { status: 200 });
   } catch (error) {
     console.error("Error processing chat request:", error);
-    return NextResponse.json(
-      { error: "Failed to process chat request" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to process chat request" }, { status: 500 });
   }
 
   // try {
