@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     });
 
     // Send email with reset link
-    const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`;
+    const resetUrl = `https://ctrlplusfiction.tech/reset-password?token=${token}`;
     const transporter = nodemailer.createTransport({
       service: "gmail", // Use your email service
       auth: {
@@ -50,6 +50,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Reset link sent" });
   } catch (error) {
     console.error("Error in forgot-password:", error);
-    return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to process request" },
+      { status: 500 }
+    );
   }
 }
