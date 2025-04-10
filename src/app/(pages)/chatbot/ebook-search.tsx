@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Book } from "@/types/next-auth";
-import { Search, FileText, Download } from "lucide-react";
+import { Search, FileText, Download, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import Image from "next/image";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import { saveSearchQuery } from "@/app/api/books/books";
+import { SearchSuggestions } from "@/components/search-suggestions";
 // import { useRouter } from "next/navigation";
 
 export default function BookSearch() {
@@ -26,6 +27,12 @@ export default function BookSearch() {
     "archive",
   ]);
   //   const router = useRouter();
+
+  // AI suggestion states
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState<boolean>(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState<boolean>(false);
+  const searchInputRef = useRef<HTMLDivElement>(null);
 
   const searchBooks = async (): Promise<void> => {
     if (!query.trim()) return;
@@ -101,11 +108,69 @@ export default function BookSearch() {
         return "default";
     }
   }
+  // AI suggestion functions
+  const generateSuggestions = async () => {
+    if (!query.trim()) {
+      toast({
+        title: "Enter a search term",
+        description: "Please enter a search term to generate suggestions.",
+      });
+      return;
+    }
+
+    try {
+      setIsLoadingSuggestions(true);
+      setIsSuggestionsOpen(true);
+
+      const response = await fetch("/api/search-suggestion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch suggestions");
+      }
+
+      const data = await response.json();
+      setSuggestions(data.suggestions || []);
+    } catch (error) {
+      console.error("Error generating suggestions:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate suggestions. Please try again.",
+        variant: "destructive",
+      });
+      setSuggestions([]);
+    } finally {
+      setIsLoadingSuggestions(false);
+    }
+  };
+
+  const handleSelectSuggestion = (suggestion: string) => {
+    setQuery(suggestion);
+    setIsSuggestionsOpen(false);
+    // Optional: automatically search with the selected suggestion
+    // setTimeout(() => searchBooks(), 100);
+  };
 
   return (
     <div className="container py-8">
       <h1 className="text-3xl font-bold mb-6">Ctrl+Fiction: Multi-Source EBook Search</h1>
       <div className="space-y-4 mb-8">
+        <div className="bg-accent border-l-4 border-foreground p-4 mb-4 rounded-md">
+          <div className="flex items-center">
+            <Sparkles className="h-4 w-4 text-foreground mr-2" />
+            <p className="text-sm text-foreground font-medium">AI Search Suggestions</p>
+          </div>
+          <p className="text-sm text-foreground mt-1">
+            Type a search term and click the sparkle icon (<Sparkles className="h-3 w-3 inline" />)
+            to get AI-powered book suggestions. Use arrow keys to navigate and Enter to select a
+            suggestion.
+          </p>
+        </div>
         <div className="flex flex-wrap gap-6">
           <div className="flex items-center space-x-2">
             <Checkbox
@@ -143,15 +208,32 @@ export default function BookSearch() {
         </div>
 
         <div className="flex gap-2">
-          <div className="relative flex-grow">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <div className="relative flex-grow" ref={searchInputRef}>
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-foreground" />
             <Input
               type="text"
               placeholder="Search for ebooks..."
-              className="pl-8"
+              className="pl-8 pr-10"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && searchBooks()}
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1 h-8 w-8 text-foreground hover:text-primary"
+              onClick={generateSuggestions}
+              disabled={isLoadingSuggestions}
+              title="Get AI suggestions">
+              <Sparkles className="h-4 w-4" />
+            </Button>
+
+            <SearchSuggestions
+              isOpen={isSuggestionsOpen}
+              suggestions={suggestions}
+              isLoading={isLoadingSuggestions}
+              onSelect={handleSelectSuggestion}
+              onClose={() => setIsSuggestionsOpen(false)}
             />
           </div>
           <Button onClick={searchBooks} disabled={isLoading || !query.trim()}>
