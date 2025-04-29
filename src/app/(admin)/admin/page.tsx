@@ -7,6 +7,7 @@ import { authOptions } from "@/lib/auth";
 import React from "react";
 import { redirect } from "next/navigation";
 import { getDashboardStats, getPopularBooks, getRecentActivities } from "@/lib/admin";
+import { GenerateReportButton } from "@/components/admin/generate-report";
 
 interface DashboardStats {
   totalUsers: number;
@@ -23,9 +24,12 @@ export default async function AdminDashboard() {
   }
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">Overview of your Book Explorer platform.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground">Overview of your Book Explorer platform.</p>
+        </div>
+        <GenerateReportButton />
       </div>
 
       <Suspense fallback={<MetricsSkeleton />}>
@@ -269,14 +273,3 @@ function formatDate(dateString: string) {
 
   return new Intl.DateTimeFormat("en-PH", options).format(date);
 }
-
-// async function getPopularBooks() {
-//   // Placeholder data
-//   return [
-//     { id: "1", title: "1984", downloads: 245 },
-//     { id: "2", title: "The Great Gatsby", downloads: 189 },
-//     { id: "3", title: "To Kill a Mockingbird", downloads: 156 },
-//     { id: "4", title: "Pride and Prejudice", downloads: 132 },
-//     { id: "5", title: "The Catcher in the Rye", downloads: 98 },
-//   ];
-// }
