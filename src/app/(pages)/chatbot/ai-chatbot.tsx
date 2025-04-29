@@ -77,36 +77,6 @@ export default function AiChatbot() {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
-  // Save messages to localStorage whenever they change
-
-  // const sendMessage = async () => {
-  //   if (!inputValue.trim()) return;
-  //   setLoading(true);
-
-  //   const userMessage = { role: "user", content: inputValue };
-  //   const newMessages = [...messages, userMessage];
-  //   setMessages(newMessages);
-  //   setInputValue("");
-
-  //   try {
-  //     const res = await fetch("/api/chat", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ messages: newMessages }),
-  //     });
-
-  //     const data = await res.json();
-  //     setMessages([...newMessages, { role: "bot", content: data.message }]);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     setMessages([
-  //       ...newMessages,
-  //       { role: "bot", content: "Failed to get a response." },
-  //     ]);
-  //   }
-
-  //   setLoading(false);
-  // };
 
   return (
     <div className="flex justify-center items-center mt-5 rounded-lg">
