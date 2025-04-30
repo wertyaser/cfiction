@@ -2,7 +2,7 @@ import { getPopularBooks } from "@/lib/admin";
 
 export default async function MostDownloaded() {
   return (
-    <div className="min-h-[45vh] mt-10">
+    <div className="min-h-[45vh] mt-10 mb-16">
       <h2 className="text-bold text-7xl text-center pb-6">Most Downloaded</h2>
       <TopBooks />
     </div>
