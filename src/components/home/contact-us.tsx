@@ -19,7 +19,7 @@ type SocialMedia = {
 const socialMedia: SocialMedia[] = [
   {
     name: "Facebook",
-    link: "https://www.facebook.com/LeonielNacman0",
+    link: "https://www.facebook.com/RizTechUniversity",
     icon: <Facebook />,
   },
   {
