@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
-import { getDashboardStats, getPopularBooks } from "@/lib/admin";
+import { getDashboardStats, getPopularBooks, getPopularAuthors } from "@/lib/admin";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -22,6 +22,10 @@ export async function GET() {
     // Get dashboard stats and popular books
     const stats: DashboardStats = await getDashboardStats();
     const popularBooks = await getPopularBooks();
+    const allPopularAuthors = await getPopularAuthors();
+
+    // Filter out "Unknown Author"
+    const popularAuthors = allPopularAuthors.filter((author) => author.author !== "Unknown Author");
 
     // Create workbook and worksheets
     const workbook = XLSX.utils.book_new();
@@ -43,11 +47,25 @@ export async function GET() {
     // Popular Books worksheet
     const popularBooksData = [
       ["Rank", "Book Title", "Downloads"],
-      ...popularBooks.slice(0, 5).map((book, index) => [index + 1, book.title, book.downloads]),
+      ...popularBooks.map((book, index) => [index + 1, book.title, book.downloads]),
     ];
 
     const popularBooksWorksheet = XLSX.utils.aoa_to_sheet(popularBooksData);
-    XLSX.utils.book_append_sheet(workbook, popularBooksWorksheet, "Top 5 Popular Books");
+    XLSX.utils.book_append_sheet(workbook, popularBooksWorksheet, "Popular Books");
+
+    // Popular Authors worksheet
+    const popularAuthorsData = [
+      ["Rank", "Author", "Book Count", "Total Downloads"],
+      ...popularAuthors.map((author, index) => [
+        index + 1,
+        author.author,
+        author.bookCount,
+        author.downloads,
+      ]),
+    ];
+
+    const popularAuthorsWorksheet = XLSX.utils.aoa_to_sheet(popularAuthorsData);
+    XLSX.utils.book_append_sheet(workbook, popularAuthorsWorksheet, "Popular Authors");
 
     // Convert workbook to buffer
     const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
