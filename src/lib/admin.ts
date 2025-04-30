@@ -8,6 +8,13 @@ import { revalidatePath } from "next/cache";
 //   email: string;
 // }
 
+interface PopularAuthor {
+  id: string;
+  author: string;
+  downloads: number;
+  bookCount: number;
+}
+
 interface Activity {
   id: string;
   userName: string;
@@ -404,6 +411,38 @@ export async function deleteUser(formData: FormData) {
 //   }
 // }
 
+export async function getPopularAuthors() {
+  try {
+    const result = await db.execute({
+      sql: `
+        SELECT 
+          MIN(id) AS id,
+          author,
+          COUNT(DISTINCT title) AS bookCount,
+          COUNT(*) AS downloads
+        FROM books
+        WHERE author IS NOT NULL AND author != ''
+        GROUP BY author
+        ORDER BY downloads DESC
+        LIMIT 10
+      `,
+      args: [],
+    });
+
+    const authors: PopularAuthor[] = result.rows.map((row) => ({
+      id: String(row.id), // Ensure id is a string
+      author: row.author as string,
+      bookCount: Number(row.bookCount), // Number of unique books by this author
+      downloads: Number(row.downloads), // Total downloads across all books by this author
+    }));
+
+    return authors;
+  } catch (error) {
+    console.error("Error fetching popular authors:", error);
+    return [];
+  }
+}
+
 export async function getPopularBooks() {
   try {
     const result = await db.execute({
@@ -416,7 +455,7 @@ export async function getPopularBooks() {
         FROM books
         GROUP BY title
         ORDER BY downloads DESC
-        LIMIT 5  -- Top 5 most popular books
+        LIMIT 10  -- Top 5 most popular books
       `,
       args: [],
     });
