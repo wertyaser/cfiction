@@ -2,7 +2,6 @@
 import { useRef, useState } from "react";
 import { Book } from "@/types/next-auth";
 import { Search, FileText, Download, Sparkles } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -158,7 +157,10 @@ export default function BookSearch() {
 
   return (
     <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-6">Ctrl+Fiction: Multi-Source EBook Search</h1>
+      <div className="flex gap-3 items-center mb-4">
+        <Image src={"/rtulogo.png"} alt={"rtu logo"} width={60} height={60} />
+        <h1 className="text-4xl font-bold">Ctrl+Fiction: Multi-Source EBook Search</h1>
+      </div>
       <div className="space-y-4 mb-8">
         <div className="bg-accent border-l-4 border-foreground p-4 mb-4 rounded-md">
           <div className="flex items-center">
