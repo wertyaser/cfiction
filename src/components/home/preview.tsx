@@ -16,7 +16,7 @@ export default function Preview() {
   const [inputValue, setInputValue] = useState("");
 
   return (
-    <div id="demo" className="max-w-5xl mx-auto pb-28 px-4 sm:px-6 lg:px-8">
+    <div id="preview" className="max-w-5xl mx-auto pb-28 px-4 sm:px-6 lg:px-8">
       <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center sm:text-left">
         <span>P</span>
         <span className="font-thin">review</span>
