@@ -4,7 +4,7 @@ import Preview from "@/components/home/preview";
 import Footer from "@/components/home/footer";
 import Header from "@/components/home/header";
 import Hero from "@/components/home/hero";
-import MostDownloaded from "@/components/home/most-downloaded";
+import Trending from "@/components/home/most-downloaded";
 import Image from "next/image";
 // import { useEffect, useState } from "react";
 // import dynamic from "next/dynamic";
@@ -30,7 +30,7 @@ export default async function Home() {
         className="hidden dark:block min-w-full"
       />
       <About />
-      <MostDownloaded />
+      <Trending />
       <Preview />
       <ContactUs />
       <Footer />
